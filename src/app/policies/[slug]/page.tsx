@@ -25,7 +25,7 @@ export default async function PolicyPage({ params }: { params: Params }) {
   return (
     <div className="page pt-12 lg:pt-20">
       <nav aria-label="Breadcrumb" className="t-caption mb-6 text-muted">
-        <Link href="/" className="hover:text-ink">
+        <Link href="/" className="max-lg:py-3 hover:text-ink">
           Home
         </Link>{" "}
         / Policies / {policy?.title ?? route.title}
@@ -35,7 +35,7 @@ export default async function PolicyPage({ params }: { params: Params }) {
         {policy ? (
           <>
             {policy.unfilled.length > 0 && process.env.NODE_ENV !== "production" && (
-              <p role="alert" className="mb-8 rounded-[8px] border border-accent bg-accent-wash p-4 text-[14px] text-ink">
+              <p role="alert" className="mb-8 rounded-[8px] border border-accent bg-accent-wash p-4 text-[0.875rem] text-ink">
                 Placeholders still to fill in src/config/site.ts: {policy.unfilled.join(", ")}. (This note only shows in development.)
               </p>
             )}

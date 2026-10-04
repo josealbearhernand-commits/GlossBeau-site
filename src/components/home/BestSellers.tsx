@@ -17,30 +17,35 @@ import type { ShopProduct } from "@/lib/shopify";
 export function BestSellers({ products, now }: { products: Record<Tab, ShopProduct[]>; now: number }) {
   const [tab, setTab] = useState<Tab>("hair-care");
   const [page, setPage] = useState(0);
+  const [pages, setPages] = useState(1);
   const track = useRef<HTMLUListElement>(null);
   const items = products[tab];
-  const perPage = 4;
-  const pages = Math.max(1, Math.ceil(items.length / perPage));
 
+  // A "page" is one visible width of the track, so the dots are right at every size:
+  // 3.7 cards per page at 1440px, 2.5 on a tablet, 1.35 on a phone.
   useEffect(() => {
     const el = track.current;
     if (!el) return;
-    const onScroll = () => {
-      const card = el.firstElementChild as HTMLElement | null;
-      if (!card) return;
-      const step = card.offsetWidth + 24;
-      setPage(Math.min(pages - 1, Math.round(el.scrollLeft / (step * perPage))));
+    const measure = () => {
+      const n = Math.max(1, Math.ceil((el.scrollWidth - 1) / el.clientWidth));
+      setPages(n);
+      setPage(Math.min(n - 1, Math.round(el.scrollLeft / el.clientWidth)));
     };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [pages]);
+    measure();
+    el.addEventListener("scroll", measure, { passive: true });
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", measure);
+      ro.disconnect();
+    };
+  }, [items]);
 
   const scrollTo = (p: number) => {
     const el = track.current;
-    const card = el?.firstElementChild as HTMLElement | null;
-    if (!el || !card) return;
+    if (!el) return;
     const target = ((p % pages) + pages) % pages;
-    el.scrollTo({ left: target * perPage * (card.offsetWidth + 24), behavior: "smooth" });
+    el.scrollTo({ left: target * el.clientWidth, behavior: "smooth" });
     setPage(target);
   };
 
@@ -57,14 +62,29 @@ export function BestSellers({ products, now }: { products: Record<Tab, ShopProdu
       </div>
 
       <div className="flex items-center justify-between gap-6 pb-5 lg:pb-10">
-        <div role="tablist" aria-label="Best seller categories" className="-mx-5 flex gap-1 overflow-x-auto px-5 lg:mx-0 lg:px-0">
+        {/* Tabs follow the WAI-ARIA pattern: one tab stop, Left/Right arrows move and select, Home/End jump. */}
+        <div
+          role="tablist"
+          aria-label="Best seller categories"
+          className="-mx-5 flex gap-1 overflow-x-auto px-5 lg:mx-0 lg:px-0"
+          onKeyDown={(e) => {
+            const i = tabs.findIndex((t) => t.key === tab);
+            const next =
+              e.key === "ArrowRight" ? (i + 1) % tabs.length : e.key === "ArrowLeft" ? (i - 1 + tabs.length) % tabs.length : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : -1;
+            if (next < 0) return;
+            e.preventDefault();
+            pick(tabs[next].key);
+            (e.currentTarget.children[next] as HTMLElement | undefined)?.focus();
+          }}
+        >
           {tabs.map((t) => (
             <button
               key={t.key}
               role="tab"
               type="button"
               aria-selected={tab === t.key}
-              aria-controls={`best-${t.key}`}
+              aria-controls="best-sellers-panel"
+              tabIndex={tab === t.key ? 0 : -1}
               onClick={() => pick(t.key)}
               className="pd-tab shrink-0"
             >
@@ -85,33 +105,36 @@ export function BestSellers({ products, now }: { products: Record<Tab, ShopProdu
       <Reveal key={tab} stagger={0.08} selector=".carousel-item" effect="float">
         <ul
           ref={track}
-          id={`best-${tab}`}
+          id="best-sellers-panel"
           role="tabpanel"
+          aria-label={`${tabs.find((t) => t.key === tab)?.label} best sellers`}
           className="carousel -mx-5 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-2 lg:mx-0 lg:px-0"
         >
-          {items.map((p, i) => (
+          {items.map((p) => (
             <li key={p.handle} className="carousel-item snap-start">
-              <ProductTile product={p} priority={i < 4} now={now} />
+              <ProductTile product={p} now={now} />
             </li>
           ))}
         </ul>
       </Reveal>
 
-      <div className="mt-6 flex justify-center gap-0" role="tablist" aria-label="Carousel pages">
-        {Array.from({ length: pages }).map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            role="tab"
-            aria-selected={i === page}
-            aria-label={`Page ${i + 1}`}
-            onClick={() => scrollTo(i)}
-            className="grid size-6 place-items-center"
-          >
-            <span className={`block h-[6px] rounded-full transition-all duration-300 ${i === page ? "w-6 bg-ink" : "w-[6px] bg-stone"}`} />
-          </button>
-        ))}
-      </div>
+      {/* Page dots: plain buttons with 44px hit areas; the active one is a short dash. Hidden when everything fits. */}
+      {pages > 1 && (
+        <nav aria-label="Carousel pages" className="mt-2 flex justify-center">
+          {Array.from({ length: pages }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Page ${i + 1} of ${pages}`}
+              aria-current={i === page ? "true" : undefined}
+              onClick={() => scrollTo(i)}
+              className="grid size-11 place-items-center"
+            >
+              <span className={`block h-[6px] rounded-full transition-all duration-300 ${i === page ? "w-6 bg-ink" : "w-[6px] bg-hairline"}`} />
+            </button>
+          ))}
+        </nav>
+      )}
     </section>
   );
 }

@@ -36,17 +36,18 @@ export default async function ProductPage({ params }: { params: Params }) {
   return (
     <div className="page pt-8 lg:pt-12">
       <nav aria-label="Breadcrumb" className="t-caption mb-6 text-muted">
-        <Link href="/" className="hover:text-ink">
+        <Link href="/" className="max-lg:py-3 hover:text-ink">
           Home
         </Link>{" "}
         /{" "}
-        <Link href={brandHref} className="hover:text-ink">
+        <Link href={brandHref} className="max-lg:py-3 hover:text-ink">
           {brand}
         </Link>{" "}
         / {product.title}
       </nav>
 
-      <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+      {/* grid-cols-1 = minmax(0,1fr): the column may shrink below the thumbnail strip's content width on phones */}
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
         <ProductGallery product={product} />
       </div>
 
@@ -76,7 +77,7 @@ export default async function ProductPage({ params }: { params: Params }) {
             {related.map((r, i) => (
               <li key={r.handle} className="min-w-0">
                 <Reveal effect="float" delay={i * 0.07}>
-                  <ProductCard product={r} />
+                  <ProductCard product={r} as="h3" />
                 </Reveal>
               </li>
             ))}

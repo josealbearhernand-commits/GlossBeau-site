@@ -17,7 +17,7 @@ export default async function BrandsPage() {
   return (
     <div className="page pt-12 lg:pt-20">
       <nav aria-label="Breadcrumb" className="t-caption mb-6 text-muted">
-        <Link href="/" className="hover:text-ink">
+        <Link href="/" className="max-lg:py-3 hover:text-ink">
           Home
         </Link>{" "}
         / Brands
@@ -38,9 +38,9 @@ export default async function BrandsPage() {
                 {logo ? (
                   <Image src={logo} alt={name} width={240} height={160} sizes="(min-width: 1024px) 240px, 45vw" />
                 ) : (
-                  <span className="relative z-10 text-center text-[18px] font-semibold leading-tight text-ink">{name}</span>
+                  <span className="relative z-10 text-center text-[1.125rem] font-semibold leading-tight text-ink">{name}</span>
                 )}
-                <span className="tnum relative z-10 text-[13px] text-muted">
+                <span className="tnum relative z-10 text-[0.8125rem] text-muted">
                   {b.count} {b.count === 1 ? "product" : "products"}
                 </span>
               </Link>

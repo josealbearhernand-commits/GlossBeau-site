@@ -3,11 +3,15 @@ import { Reveal } from "@/components/motion/Reveal";
 import { ProductCard } from "@/components/product/ProductCard";
 import type { Page, ShopProduct } from "@/lib/shopify";
 
-/** Grid of product cards for a collection or brand page, with a "Show more" link that carries the Shopify cursor. */
-export function ProductGrid({ page, base }: { page: Page<ShopProduct>; base: string }) {
+/**
+ * Grid of product cards for a collection, brand or search page, with a "Show more" link that carries the
+ * Shopify cursor. `base` may already hold a query string. `empty` replaces the default empty message.
+ */
+export function ProductGrid({ page, base, empty }: { page: Page<ShopProduct>; base: string; empty?: React.ReactNode }) {
   if (page.items.length === 0) {
-    return <p className="t-lead py-16 text-center text-muted">No products here yet.</p>;
+    return <p className="t-lead mx-auto max-w-[48ch] py-16 text-center text-muted">{empty ?? "No products here yet."}</p>;
   }
+  const next = page.endCursor ? `${base}${base.includes("?") ? "&" : "?"}after=${encodeURIComponent(page.endCursor)}` : null;
   return (
     <>
       <ul className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
@@ -19,9 +23,9 @@ export function ProductGrid({ page, base }: { page: Page<ShopProduct>; base: str
           </li>
         ))}
       </ul>
-      {page.hasNextPage && page.endCursor && (
+      {page.hasNextPage && next && (
         <div className="mt-12 flex justify-center">
-          <Link href={`${base}?after=${encodeURIComponent(page.endCursor)}`} className="pd-btn pd-btn-lg pd-btn-dark">
+          <Link href={next} className="pd-btn pd-btn-lg pd-btn-dark">
             Show more
           </Link>
         </div>
@@ -35,7 +39,7 @@ export function ListingHeader({ crumb, title, count, description }: { crumb: str
   return (
     <>
       <nav aria-label="Breadcrumb" className="t-caption mb-6 text-muted">
-        <Link href="/" className="hover:text-ink">
+        <Link href="/" className="max-lg:py-3 hover:text-ink">
           Home
         </Link>{" "}
         / {crumb} / {title}

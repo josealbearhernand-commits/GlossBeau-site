@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import { useGSAP } from "@gsap/react";
 import { gsap, reducedMotion } from "@/components/motion/gsap";
 import { Icon } from "@/components/site/Icon";
@@ -33,10 +34,20 @@ const key = (s: HeroSlide) => ("handle" in s ? s.handle : s.image);
 export function Hero({ slides }: { slides: HeroSlide[] }) {
   const ref = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(0);
+  // `paused` is automatic (hover, keyboard focus inside, hidden tab); `stopped` is the visitor's own pause button.
   const [paused, setPaused] = useState(false);
+  const [stopped, setStopped] = useState(false);
+  const halted = paused || stopped;
   const animating = useRef(false);
   const timer = useRef<number | null>(null);
   const count = slides.length;
+
+  // Only the current slide and its two neighbours carry media; the rest are empty until the show reaches them.
+  // That keeps the first paint to one clip and one poster instead of six clips (3.4MB) and twelve posters.
+  const near = (i: number) => i === index || i === (index + 1) % count || i === (index - 1 + count) % count;
+  // The first slide's poster is the largest contentful paint: ask for it before the clip arrives.
+  const first = slides[0];
+  preload("video" in first ? first.poster : first.image, { as: "image" });
 
   const go = useCallback(
     (next: number, dir: 1 | -1 = 1) => {
@@ -70,26 +81,39 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
   useEffect(() => {
     if (timer.current) window.clearTimeout(timer.current);
     const slide = slides[index];
-    if (paused || "video" in slide) return;
+    if (halted || "video" in slide) return;
     timer.current = window.setTimeout(() => go(index + 1), HOLD_MS);
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, [index, paused, slides, go]);
+  }, [index, halted, slides, go]);
 
   // Play the active clip from the start; advance when it ends
   useEffect(() => {
     const el = ref.current?.querySelector<HTMLVideoElement>(`[data-slide="${index}"] video`);
     if (!el) return;
     el.currentTime = 0;
-    const play = el.play();
-    if (play) play.catch(() => go(index + 1));
+    if (!halted) {
+      const play = el.play();
+      if (play) play.catch(() => go(index + 1));
+    }
     const onEnd = () => {
-      if (!paused) window.setTimeout(() => go(index + 1), 600);
+      if (!halted) window.setTimeout(() => go(index + 1), 600);
     };
     el.addEventListener("ended", onEnd);
     return () => el.removeEventListener("ended", onEnd);
-  }, [index, paused, go]);
+    // Only the slide change restarts the clip; the effect below handles pause/resume in place
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, go]);
+
+  // Pause or resume the active clip in place (no restart) when the show is halted or released
+  useEffect(() => {
+    const el = ref.current?.querySelector<HTMLVideoElement>(`[data-slide="${index}"] video`);
+    if (!el) return;
+    if (halted) el.pause();
+    else if (el.ended) go(index + 1);
+    else el.play()?.catch(() => {});
+  }, [halted, index, go]);
 
   useEffect(() => {
     const onVis = () => setPaused(document.hidden);
@@ -109,21 +133,30 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
   return (
     <section ref={ref} className="flex flex-col items-center pb-4">
       <div
-        className="hero-stage relative h-[420px] w-full overflow-hidden bg-[#e9e2d9] lg:h-[min(600px,70svh)]"
+        className="hero-stage relative h-[420px] w-full overflow-hidden bg-faint lg:h-[min(600px,70svh)]"
         onPointerEnter={() => setPaused(true)}
         onPointerLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
+        }}
+        role="region"
         aria-roledescription="carousel"
         aria-label="Featured products"
+        aria-live={halted ? "polite" : "off"}
       >
         {slides.map((s, i) => (
           <div
             key={key(s)}
             data-slide={i}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${count}: ${s.title}`}
             className="absolute inset-0"
             style={{ opacity: i === index ? 1 : 0, visibility: i === index ? "visible" : "hidden" }}
             aria-hidden={i !== index}
           >
-            {"video" in s ? (
+            {!near(i) ? null : "video" in s ? (
               <>
                 {/* Desktop: the 4:3 clip is taller than the hero, so it shows whole (contain) and a blurred copy
                     of its own still fills the sides. Phones (390×420) are nearly square, so the clip covers. */}
@@ -143,7 +176,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
                 src={s.image}
                 alt={s.alt}
                 fill
-                priority
+                priority={i === 0}
                 quality={90}
                 sizes="100vw"
                 className="object-cover"
@@ -169,12 +202,23 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
         >
           <Icon name="caretDown" size={18} className="-rotate-90" />
         </button>
-
+        {/* Pause / play: the one control WCAG 2.2.2 asks for on moving content; same 48px white circle as the arrows */}
+        <button
+          type="button"
+          onClick={() => setStopped((v) => !v)}
+          aria-pressed={stopped}
+          aria-label={stopped ? "Play slideshow" : "Pause slideshow"}
+          className="absolute bottom-4 right-4 grid size-12 place-items-center rounded-full bg-surface text-ink shadow-[var(--shadow-lg)] transition-transform hover:scale-105 lg:bottom-6 lg:right-8"
+        >
+          <Icon name={stopped ? "play" : "pause"} size={18} />
+        </button>
       </div>
 
-      <div className="hero-mark mt-8 flex flex-col items-center">
+      {/* The page's h1: the big wordmark, with the store's one-line description for screen readers and search engines */}
+      <h1 className="hero-mark mt-8 flex flex-col items-center">
         <Logo size={56} className="sm:[font-size:84px]" />
-      </div>
+        <span className="sr-only">: salon-grade hair care, nails, barber supplies and styling tools, open to everyone</span>
+      </h1>
     </section>
   );
 }

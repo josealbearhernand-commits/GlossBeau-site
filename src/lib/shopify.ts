@@ -5,13 +5,41 @@
  * and the page shows that message instead of products.
  */
 import { brandSlug, money, tabs, type Tab } from "@/data/home";
+import trimmed from "@/data/trimmed.json";
 
 export { money };
+
+/** Display-ready product photo for the cards (see ProductImage.tsx). */
+export interface ProductPhoto {
+  src: string;
+  width: number;
+  height: number;
+  /** true = pre-trimmed local copy from scripts/trim-images.mjs; false = Shopify CDN at width=800. */
+  trimmed: boolean;
+}
+
+const manifest = trimmed as Record<string, { src: string; width: number; height: number }>;
+const CARD_WIDTH = 800;
+
+/** Shopify CDN URL with a width parameter (the CDN resizes on the fly, never above the source size). */
+export const cdnWidth = (url: string, width: number) =>
+  url.includes("cdn.shopify.com") ? `${url}${url.includes("?") ? "&" : "?"}width=${width}` : url;
+
+/** The trimmed copy when the build step has one for this URL, otherwise the CDN image at card width. */
+export function resolvePhoto(image: { url: string; width: number; height: number } | null | undefined): ProductPhoto | undefined {
+  if (!image?.url) return undefined;
+  const t = manifest[image.url];
+  if (t) return { src: t.src, width: t.width, height: t.height, trimmed: true };
+  const scale = Math.min(1, CARD_WIDTH / Math.max(image.width || CARD_WIDTH, 1));
+  return { src: cdnWidth(image.url, CARD_WIDTH), width: Math.round((image.width || CARD_WIDTH) * scale), height: Math.round((image.height || CARD_WIDTH) * scale), trimmed: false };
+}
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN ?? "";
 const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? "";
 const version = process.env.SHOPIFY_API_VERSION ?? "2026-07";
 const REVALIDATE = 300;
+/** Cache tag on every Storefront fetch; `revalidateTag(SHOPIFY_TAG)` drops the whole catalog cache. */
+export const SHOPIFY_TAG = "shopify";
 
 export class CatalogError extends Error {}
 
@@ -29,7 +57,8 @@ export async function storefront<T>(query: string, variables: Record<string, unk
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Shopify-Storefront-Access-Token": token },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: REVALIDATE },
+      // Every Shopify response is cached for 5 minutes and tagged, so POST /api/revalidate can purge them all at once.
+      next: { revalidate: REVALIDATE, tags: [SHOPIFY_TAG] },
     });
   } catch (e) {
     throw new CatalogError(`Could not reach Shopify (${domain}): ${(e as Error).message}`);
@@ -49,7 +78,10 @@ export interface ShopProduct {
   vendor: string;
   price: number;
   compareAtPrice?: number;
-  image: string;
+  /** Featured photo URL; missing when the product has no media in Shopify yet (cards show the NoPhoto frame). */
+  image?: string;
+  /** The same photo, display-ready for the cards (trimmed copy or CDN at card width). */
+  photo?: ProductPhoto;
   /** ISO date the product was created in Shopify. Drives the NEW badge (last 30 days). */
   createdAt: string;
   variantCount: number;
@@ -99,7 +131,7 @@ const PRODUCT_FIELDS = /* GraphQL */ `
     vendor
     createdAt
     availableForSale
-    featuredImage { url }
+    featuredImage { url width height }
     priceRange { minVariantPrice { amount } }
     compareAtPriceRange { minVariantPrice { amount } }
     options { name optionValues { name } }
@@ -112,7 +144,7 @@ interface RawProduct {
   vendor: string;
   createdAt: string;
   availableForSale: boolean;
-  featuredImage: { url: string } | null;
+  featuredImage: { url: string; width: number; height: number } | null;
   priceRange: { minVariantPrice: { amount: string } };
   compareAtPriceRange: { minVariantPrice: { amount: string } };
   options: { name: string; optionValues: { name: string }[] }[];
@@ -129,7 +161,8 @@ function toProduct(p: RawProduct): ShopProduct {
     vendor: p.vendor,
     price,
     compareAtPrice: compare > price ? compare : undefined,
-    image: p.featuredImage?.url ?? "",
+    image: p.featuredImage?.url || undefined,
+    photo: resolvePhoto(p.featuredImage),
     createdAt: p.createdAt,
     variantCount,
     optionName: real[0]?.name,

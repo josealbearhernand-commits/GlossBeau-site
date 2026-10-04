@@ -17,6 +17,7 @@ import shieldCheck from "@iconify-icons/ph/shield-check-light";
 import leaf from "@iconify-icons/ph/leaf-light";
 import sparkle from "@iconify-icons/ph/sparkle-light";
 import play from "@iconify-icons/ph/play-light";
+import pause from "@iconify-icons/ph/pause-light";
 import drop from "@iconify-icons/ph/drop-light";
 import scissors from "@iconify-icons/ph/scissors-light";
 import check from "@iconify-icons/ph/check-light";
@@ -41,6 +42,7 @@ export const icons = {
   leaf,
   sparkle,
   play,
+  pause,
   drop,
   scissors,
   check,

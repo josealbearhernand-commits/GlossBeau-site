@@ -1,11 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import { money } from "@/data/home";
 import type { ShopProduct } from "@/lib/shopify";
 import { Icon } from "@/components/site/Icon";
+import { ProductImage } from "@/components/product/ProductImage";
 
-/** Shop-style elevated card: 28px radius, dual soft shadow, 20px inner image radius, no border. */
-export function ProductCard({ product, priority = false }: { product: ShopProduct; priority?: boolean }) {
+/**
+ * Shop-style elevated card: 28px radius, dual soft shadow, 20px inner image radius, no border.
+ * `as` sets the title's heading level: h2 under a page h1 (collection, brand, search), h3 under a section h2.
+ */
+export function ProductCard({ product, priority = false, as: Heading = "h2" }: { product: ShopProduct; priority?: boolean; as?: "h2" | "h3" }) {
   const sold = !product.availableForSale;
   const onSale = product.compareAtPrice != null && !sold;
   return (
@@ -13,16 +16,14 @@ export function ProductCard({ product, priority = false }: { product: ShopProduc
       href={`/products/${product.handle}`}
       className="card group flex min-w-0 flex-col text-ink outline-offset-4 transition-shadow duration-300 hover:shadow-[var(--shadow-lg)]"
     >
-      <div className="frame gloss aspect-square">
-        <Image
-          src={product.image}
-          alt={product.title}
-          fill
+      {/* The shared 4:5 photo box (ProductImage) inside the card's 8px white frame, so products are the same size here as in the homepage carousel */}
+      <div className="frame gloss">
+        <ProductImage
+          product={product}
           sizes="(min-width: 1200px) 280px, (min-width: 768px) 33vw, 50vw"
           priority={priority}
-          className={`p-5 transition-transform duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:scale-[1.05] ${
-            sold ? "opacity-45" : ""
-          }`}
+          radius="rounded-[var(--radius-image)]"
+          className={sold ? "opacity-45" : ""}
         />
         {sold ? (
           <span className="badge badge-soldout absolute left-3 top-3">Sold out</span>
@@ -34,8 +35,8 @@ export function ProductCard({ product, priority = false }: { product: ShopProduc
         </span>
       </div>
       <div className="flex flex-col gap-1 px-4 pb-4 pt-2">
-        <p className="t-micro uppercase tracking-[0.02em] text-muted">{product.vendor}</p>
-        <h3 className="t-ui-sm line-clamp-2 text-ink">{product.title}</h3>
+        <p className="t-micro text-muted">{product.vendor}</p>
+        <Heading className="t-ui-sm line-clamp-2 text-ink">{product.title}</Heading>
         <p className="tnum t-body-sm flex items-baseline gap-2 text-ink">
           <span>{money(product.price)}</span>
           {onSale && <s className="text-muted">{money(product.compareAtPrice!)}</s>}

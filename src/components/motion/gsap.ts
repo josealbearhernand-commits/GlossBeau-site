@@ -1,15 +1,14 @@
 "use client";
 
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
 
+// Only the GSAP core ships: the scroll reveals use IntersectionObserver (Reveal.tsx) and the hero
+// glide is a plain timeline, so ScrollTrigger and SplitText would be dead weight in the bundle.
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, SplitText);
   gsap.defaults({ ease: "power3.out", duration: 0.9 });
 }
 
 export const reducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export { gsap, ScrollTrigger, SplitText };
+export { gsap };

@@ -28,7 +28,7 @@ export default async function HairCarePage() {
   return (
     <div className="page pt-12 lg:pt-20">
       <nav aria-label="Breadcrumb" className="t-caption mb-6 text-muted">
-        <Link href="/" className="hover:text-ink">
+        <Link href="/" className="max-lg:py-3 hover:text-ink">
           Home
         </Link>{" "}
         / Hair care

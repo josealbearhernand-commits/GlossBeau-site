@@ -3,24 +3,25 @@ import { Logo } from "./Logo";
 import { EmailForm } from "./EmailForm";
 import { site } from "@/config/site";
 
+// Every link goes somewhere real. Pages that do not exist yet (Our story, FAQ, order tracking) are not
+// listed; add them here when they are written.
 const cols = [
   {
     title: "Support",
     links: [
       ["Shipping and returns", "/policies/refunds"],
       ["Shipping policy", "/policies/shipping"],
-      ["Track an order", "#"],
+      ["Track an order", `mailto:${site.supportEmail}?subject=${encodeURIComponent("Where is my order?")}`],
       ["Contact us", `mailto:${site.supportEmail}`],
-      ["FAQ", "#"],
     ],
   },
   {
     title: "About",
     links: [
-      ["Our story", "#"],
       ["Brands we carry", "/brands"],
       ["Professionals", "/#pro"],
       ["Privacy", "/policies/privacy"],
+      ["Terms", "/policies/terms"],
     ],
   },
   {
@@ -47,11 +48,13 @@ export function Footer() {
         <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:mt-8 lg:grid-cols-[repeat(3,minmax(0,224px))]">
           {cols.map((c) => (
             <div key={c.title}>
-              <h2 className="mb-6 text-[16px] font-semibold uppercase leading-none tracking-[0.02em] lg:text-[24px]">{c.title}</h2>
-              <ul className="grid gap-4">
+              <h2 className="mb-6 text-[1rem] font-semibold uppercase leading-none tracking-[0.02em] lg:text-[1.5rem]">{c.title}</h2>
+              {/* On phones the rows sit 24px apart and each link carries 12px of vertical padding: a 41px
+                  tap area with no overlap, with the 14px/32px desktop rhythm untouched. */}
+              <ul className="grid gap-6 lg:gap-4">
                 {c.links.map(([label, href]) => (
                   <li key={label} className="leading-4">
-                    <Link href={href} className="text-[14px] leading-[14px] text-ink underline-offset-4 hover:underline">
+                    <Link href={href} className="text-[0.875rem] leading-[0.875rem] text-ink underline-offset-4 hover:underline max-lg:py-3">
                       {label}
                     </Link>
                   </li>
@@ -62,13 +65,14 @@ export function Footer() {
         </nav>
 
         <div>
-          <h2 className="mb-4 text-[24px] font-semibold uppercase leading-[26px] tracking-[0.02em]">Subscribe to newsletter</h2>
-          <p className="mb-4 text-[16px] leading-[22px]">Be the first to know about new products, pro deals and restocks.</p>
+          <h2 className="mb-4 text-[1.5rem] font-semibold uppercase leading-[1.625rem] tracking-[0.02em]">Subscribe to newsletter</h2>
+          <p className="mb-4 text-[1rem] leading-[1.375rem]">Be the first to know about new products, pro deals and restocks.</p>
           <EmailForm
             id="footer-email"
             buttonLabel="Sign me up"
+            subject="Newsletter sign-up"
             className="flex flex-col gap-4 sm:flex-row sm:items-center"
-            inputClassName="h-10 flex-1 bg-surface px-3"
+            inputClassName="h-10 w-full bg-surface px-3 sm:w-auto sm:flex-1"
             buttonClassName="pd-btn-sm pd-btn-dark"
           />
         </div>
@@ -78,19 +82,19 @@ export function Footer() {
         <div className="grid items-center gap-6 border-t border-faint pt-8 text-center lg:grid-cols-2 lg:text-left">
           <ul className="order-3 flex justify-center gap-6 lg:order-1 lg:justify-start">
             <li>
-              <Link href="/policies/privacy" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
+              <Link href="/policies/privacy" className="text-[0.875rem] text-ink hover:underline hover:underline-offset-4 max-lg:py-3">
                 Privacy
               </Link>
             </li>
             <li>
-              <Link href="/policies/terms" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
+              <Link href="/policies/terms" className="text-[0.875rem] text-ink hover:underline hover:underline-offset-4 max-lg:py-3">
                 Terms
               </Link>
             </li>
           </ul>
           <div className="order-1 flex flex-col items-center justify-center gap-4 lg:order-2 lg:flex-row lg:gap-10">
             <Logo size={22} href="/" />
-            <p className="text-[16px] leading-5 text-muted">© {new Date().getFullYear()} {site.brand} · {site.legalName}</p>
+            <p className="text-[1rem] leading-5 text-muted">© {new Date().getFullYear()} {site.brand} · {site.legalName}</p>
           </div>
         </div>
       </div>

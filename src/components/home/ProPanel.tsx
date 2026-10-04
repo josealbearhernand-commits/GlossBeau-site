@@ -10,20 +10,21 @@ import { EmailForm } from "@/components/site/EmailForm";
 export function ProPanel() {
   return (
     <section id="pro" className="pd-section container-pd scroll-mt-24">
-      <Reveal effect="float" className="grid lg:grid-cols-2">
+      <Reveal effect="float" className="grid grid-cols-1 lg:grid-cols-2">
         <div className="flex flex-col justify-center gap-6 bg-faint p-8 lg:gap-12 lg:p-16">
           <div className="flex flex-col gap-6">
             <p className="pd-eyebrow text-ink">For professionals</p>
-            <h2 className="font-serif text-[32px] leading-[35px] tracking-[-0.01em] text-ink lg:text-[40px] lg:leading-[44px]">
+            <h2 className="font-serif text-[2rem] leading-[2.1875rem] tracking-[-0.01em] text-ink lg:text-[2.5rem] lg:leading-[2.75rem]">
               Licensed? Unlock <em className="italic">pro</em> pricing.
             </h2>
-            <p className="text-[16px] leading-[22px] text-ink">Stylists, barbers and nail techs get trade pricing.</p>
+            <p className="text-[1rem] leading-[1.375rem] text-ink">Stylists, barbers and nail techs get trade pricing.</p>
           </div>
           <EmailForm
             id="pro-email"
             buttonLabel="Apply"
+            subject="Pro pricing application"
             className="flex flex-col gap-2 sm:flex-row"
-            inputClassName="h-[53px] flex-1 bg-faint px-3 py-4"
+            inputClassName="h-[53px] w-full bg-faint px-3 sm:w-auto sm:flex-1"
             buttonClassName="pd-btn-dark h-[53px] px-6"
           />
         </div>

@@ -15,6 +15,8 @@
   --muted: #6b635b;
   --stone: #c9c1b7;
   --fog: #b8b0a6;
+  /* Hairline for input borders and inactive indicators: 3:1 against every light surface (WCAG 1.4.11) */
+  --hairline: #8a8176;
   --accent: #d4784e;
   --accent-deep: #c0673f;
   --accent-wash: #f6ddd0;
@@ -56,7 +58,7 @@
   --accent-foreground: var(--ink);
   --destructive: oklch(0.577 0.245 27.325);
   --border: var(--faint);
-  --input: var(--faint);
+  --input: var(--hairline);
   --ring: var(--accent);
   --radius: 0.625rem;
 }
@@ -75,6 +77,7 @@
   --color-muted: var(--muted);
   --color-stone: var(--stone);
   --color-fog: var(--fog);
+  --color-hairline: var(--hairline);
   --color-accent: var(--accent);
   --color-accent-deep: var(--accent-deep);
   --color-accent-wash: var(--accent-wash);
@@ -129,7 +132,7 @@ body {
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 1rem;
   letter-spacing: -0.031em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -138,21 +141,21 @@ body {
 ::selection { background: var(--accent-wash); color: var(--ink); }
 
 /* Type scale — hierarchy by size and tracking, never by bold (max 600) */
-.t-display-hero { font-weight: 600; letter-spacing: -0.06em; line-height: 0.92; font-size: clamp(56px, 11vw, 128px); }
-.t-display { font-weight: 600; letter-spacing: -0.055em; line-height: 0.95; font-size: clamp(44px, 8vw, 96px); }
-.t-heading-lg { font-weight: 600; letter-spacing: -0.05em; line-height: 1.02; font-size: clamp(32px, 4.5vw, 48px); }
-.t-heading { font-weight: 600; letter-spacing: -0.045em; line-height: 1.08; font-size: clamp(26px, 3.4vw, 34px); }
-.t-heading-sm { font-weight: 600; letter-spacing: -0.05em; line-height: 1.15; font-size: 20px; }
-.t-lead { font-weight: 400; letter-spacing: -0.031em; line-height: 1.38; font-size: 18px; }
-.t-body { font-weight: 400; letter-spacing: -0.031em; line-height: 1.5; font-size: 16px; }
-.t-body-sm { font-weight: 400; letter-spacing: -0.014em; line-height: 1.4; font-size: 14px; }
-.t-ui { font-weight: 500; letter-spacing: -0.031em; line-height: 1.2; font-size: 16px; }
-.t-ui-sm { font-weight: 600; letter-spacing: -0.014em; line-height: 1.2; font-size: 14px; }
-.t-caption { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 12px; }
-.t-eyebrow { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 12px; color: var(--muted); }
-.t-nav { font-weight: 500; letter-spacing: -0.014em; line-height: 1.2; font-size: 14px; }
-.t-label { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 12px; }
-.t-micro { font-weight: 500; letter-spacing: -0.058em; line-height: 1.1; font-size: 9px; }
+.t-display-hero { font-weight: 600; letter-spacing: -0.06em; line-height: 0.92; font-size: clamp(3.5rem, 11vw, 8rem); }
+.t-display { font-weight: 600; letter-spacing: -0.055em; line-height: 0.95; font-size: clamp(2.75rem, 8vw, 6rem); }
+.t-heading-lg { font-weight: 600; letter-spacing: -0.05em; line-height: 1.02; font-size: clamp(2rem, 4.5vw, 3rem); }
+.t-heading { font-weight: 600; letter-spacing: -0.045em; line-height: 1.08; font-size: clamp(1.625rem, 3.4vw, 2.125rem); }
+.t-heading-sm { font-weight: 600; letter-spacing: -0.05em; line-height: 1.15; font-size: 1.25rem; }
+.t-lead { font-weight: 400; letter-spacing: -0.031em; line-height: 1.38; font-size: 1.125rem; }
+.t-body { font-weight: 400; letter-spacing: -0.031em; line-height: 1.5; font-size: 1rem; }
+.t-body-sm { font-weight: 400; letter-spacing: -0.014em; line-height: 1.4; font-size: 0.875rem; }
+.t-ui { font-weight: 500; letter-spacing: -0.031em; line-height: 1.2; font-size: 1rem; }
+.t-ui-sm { font-weight: 600; letter-spacing: -0.014em; line-height: 1.2; font-size: 0.875rem; }
+.t-caption { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 0.75rem; }
+.t-eyebrow { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 0.75rem; color: var(--muted); }
+.t-nav { font-weight: 500; letter-spacing: -0.014em; line-height: 1.2; font-size: 0.875rem; }
+.t-label { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 0.75rem; }
+.t-micro { font-weight: 500; letter-spacing: 0.06em; line-height: 1.2; font-size: 0.6875rem; text-transform: uppercase; }
 .tnum { font-variant-numeric: tabular-nums; }
 
 /* Layout */
@@ -162,7 +165,7 @@ body {
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   height: 48px; padding: 0 24px; border-radius: var(--radius-pill); border: 1px solid transparent;
-  font-weight: 500; font-size: 16px; letter-spacing: -0.031em; line-height: 1;
+  font-weight: 500; font-size: 1rem; letter-spacing: -0.031em; line-height: 1;
   cursor: pointer; text-decoration: none; white-space: nowrap;
   transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
@@ -175,14 +178,16 @@ body {
 .btn-light:hover { box-shadow: var(--shadow-card); }
 .btn-dark { background: var(--ink-deep); color: var(--on-dark); }
 .btn-dark:hover { background: var(--slate-ink); }
-.btn-sm { height: 36px; padding: 0 16px; font-size: 14px; font-weight: 600; letter-spacing: -0.014em; }
+.btn-sm { height: 36px; padding: 0 16px; font-size: 0.875rem; font-weight: 600; letter-spacing: -0.014em; }
 .btn[disabled] { background: var(--stone); color: var(--surface); box-shadow: none; cursor: not-allowed; }
 .on-dark .btn:focus-visible { outline-color: var(--on-dark); }
+/* Light on dark reads thinner: a touch more tracking for the paragraphs on the dark panels */
+.on-dark p { letter-spacing: -0.014em; }
 
 .chip {
   display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px 0 10px;
   border: 1px solid var(--faint); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink);
-  box-shadow: var(--shadow-sm); font-weight: 400; font-size: 16px; letter-spacing: -0.031em; line-height: 1;
+  box-shadow: var(--shadow-sm); font-weight: 400; font-size: 1rem; letter-spacing: -0.031em; line-height: 1;
   transition: box-shadow .18s, background-color .18s, color .18s; text-decoration: none; cursor: pointer;
 }
 .chip:hover { box-shadow: var(--shadow-card); }
@@ -191,7 +196,7 @@ body {
 
 .badge {
   display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: var(--radius-pill);
-  font-weight: 600; font-size: 12px; letter-spacing: -0.017em; white-space: nowrap; background: var(--surface); color: var(--ink);
+  font-weight: 600; font-size: 0.75rem; letter-spacing: -0.017em; white-space: nowrap; background: var(--surface); color: var(--ink);
   box-shadow: var(--shadow-sm);
 }
 .badge-sale { background: var(--accent); color: var(--on-accent); box-shadow: none; }
@@ -210,7 +215,7 @@ body {
 .gloss { overflow: hidden; }
 .gloss::after {
   content: ""; position: absolute; top: -20%; bottom: -20%; left: -40%; width: 30%;
-  background: rgba(255,255,255,0.7); opacity: 0; transform: skewX(-18deg) translateX(0);
+  background: color-mix(in srgb, var(--surface) 70%, transparent); opacity: 0; transform: skewX(-18deg) translateX(0);
   pointer-events: none;
 }
 .gloss:hover::after { animation: gloss-sweep .9s cubic-bezier(.22,.61,.36,1) forwards; }
@@ -222,7 +227,7 @@ body {
 
 /* Brand grid — the Diamond Pro brands wall: white tiles, hairline, warm light rising on hover */
 .brand-card { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 3 / 2; padding: 22px; background: var(--surface); border: 1px solid var(--faint); border-radius: 20px; overflow: hidden; text-decoration: none; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
-.brand-card::after { content: ""; position: absolute; left: -12%; right: -12%; bottom: 0; height: 78%; background: radial-gradient(ellipse 72% 88% at 50% 108%, rgba(212,120,78,.35) 0%, rgba(212,120,78,.14) 42%, transparent 74%); opacity: 0; transform: translateY(35%); transition: opacity .35s ease, transform .5s cubic-bezier(.22,.61,.36,1); pointer-events: none; }
+.brand-card::after { content: ""; position: absolute; left: -12%; right: -12%; bottom: 0; height: 78%; background: radial-gradient(ellipse 72% 88% at 50% 108%, color-mix(in srgb, var(--accent) 35%, transparent) 0%, color-mix(in srgb, var(--accent) 14%, transparent) 42%, transparent 74%); opacity: 0; transform: translateY(35%); transition: opacity .35s ease, transform .5s cubic-bezier(.22,.61,.36,1); pointer-events: none; }
 .brand-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
 .brand-card:hover::after { opacity: 1; transform: translateY(0); }
 .brand-card img { position: relative; z-index: 1; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; transition: transform .4s cubic-bezier(.22,.61,.36,1); }
@@ -232,6 +237,11 @@ body {
 /* "More brands (X)" tile: same tile style, text instead of a logo */
 .brand-card-more { background: var(--canvas); }
 .brand-card-more:hover { background: var(--surface); }
+
+/* Thin themed scrollbar for horizontal strips that must show their overflow (product thumbnails) */
+.scroll-thin { scrollbar-width: thin; scrollbar-color: var(--stone) transparent; }
+.scroll-thin::-webkit-scrollbar { height: 6px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: var(--stone); border-radius: 9999px; }
 
 /* Product description HTML from Shopify */
 .prose-gb p, .prose-gb ul, .prose-gb ol { margin-bottom: 1em; }
@@ -243,9 +253,9 @@ body {
 .prose-gb img { max-width: 100%; height: auto; border-radius: 12px; }
 
 /* Policy pages: readable column from content/policies.md */
-.policy { color: var(--ink); font-size: 16px; line-height: 1.6; letter-spacing: -0.014em; }
-.policy h2 { font-weight: 600; font-size: 24px; line-height: 1.2; letter-spacing: -0.03em; margin: 2.2em 0 .7em; }
-.policy h3 { font-weight: 600; font-size: 18px; line-height: 1.3; margin: 1.8em 0 .5em; }
+.policy { color: var(--ink); font-size: 1rem; line-height: 1.6; letter-spacing: -0.014em; }
+.policy h2 { font-weight: 600; font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.03em; margin: 2.2em 0 .7em; }
+.policy h3 { font-weight: 600; font-size: 1.125rem; line-height: 1.3; margin: 1.8em 0 .5em; }
 .policy p, .policy ul, .policy ol { margin-bottom: 1em; }
 .policy ul { list-style: disc; padding-left: 1.4em; }
 .policy ol { list-style: decimal; padding-left: 1.4em; }
@@ -254,12 +264,12 @@ body {
 .policy a:hover { text-decoration-color: var(--ink); }
 .policy strong { font-weight: 600; }
 .policy hr { border: 0; border-top: 1px solid var(--faint); margin: 2.5em 0; }
-.policy table { width: 100%; border-collapse: collapse; margin: 1.5em 0; font-size: 15px; background: var(--surface); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.policy table { width: 100%; border-collapse: collapse; margin: 1.5em 0; font-size: 0.9375rem; background: var(--surface); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); }
 .policy th, .policy td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--faint); vertical-align: top; }
-.policy th { font-weight: 600; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--canvas); }
+.policy th { font-weight: 600; font-size: 0.75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--canvas); }
 .policy tr:last-child td { border-bottom: 0; }
-.policy blockquote { border-left: 3px solid var(--accent); padding-left: 1em; color: var(--muted); margin: 1.5em 0; }
-.policy code { font-family: var(--font-mono); font-size: 14px; background: var(--faint); padding: 2px 6px; border-radius: 6px; }
+.policy blockquote { border-left: 1px solid var(--stone); padding-left: 1.25em; font-style: italic; color: var(--muted); margin: 1.5em 0; }
+.policy code { font-family: var(--font-mono); font-size: 0.875rem; background: var(--faint); padding: 2px 6px; border-radius: 6px; }
 
 /* ───────── Peak Design layout system (measured on peakdesign.com at 1440px and 390px) ───────── */
 /* Content gutter: 64px on desktop, 20px on phones; sections stack with the same padding top and bottom */
@@ -271,18 +281,18 @@ body {
 }
 
 /* Serif section heading: 40px / 44px / -0.4px (24px / 26.4px on phones) */
-.pd-heading { font-family: var(--font-serif); font-weight: 400; font-size: 24px; line-height: 1.1; letter-spacing: -0.01em; color: var(--ink); font-variation-settings: "opsz" 144, "SOFT" 30; }
-@media (min-width: 1024px) { .pd-heading { font-size: 40px; line-height: 44px; } }
+.pd-heading { font-family: var(--font-serif); font-weight: 400; font-size: 1.5rem; line-height: 1.1; letter-spacing: -0.01em; color: var(--ink); font-variation-settings: "opsz" 144, "SOFT" 30; }
+@media (min-width: 1024px) { .pd-heading { font-size: 2.5rem; line-height: 44px; } }
 .font-serif { font-family: var(--font-serif); font-variation-settings: "opsz" 144, "SOFT" 30; }
 .font-mono { font-family: var(--font-mono); }
 
 /* Eyebrow: 16px uppercase, 0.6px tracking on Peak; 14px here so it reads as a label at our sizes */
-.pd-eyebrow { font-size: 14px; line-height: 1; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.pd-eyebrow { font-size: 0.875rem; line-height: 1; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
 
 /* Buttons: 4px radius, uppercase. Small 40px (14px, 8px 16px), large 48px (16px, 12px 24px). */
-.pd-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 12px 24px; border-radius: 4px; border: 1px solid transparent; font-size: 16px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; white-space: nowrap; cursor: pointer; text-decoration: none; transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
-.pd-btn-sm { height: 40px; padding: 8px 16px; font-size: 14px; }
-.pd-btn-lg { height: 48px; padding: 12px 24px; font-size: 16px; }
+.pd-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 12px 24px; border-radius: 4px; border: 1px solid transparent; font-size: 1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; white-space: nowrap; cursor: pointer; text-decoration: none; transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
+.pd-btn-sm { height: 40px; padding: 8px 16px; font-size: 0.875rem; }
+.pd-btn-lg { height: 48px; padding: 12px 24px; font-size: 1rem; }
 .pd-btn-dark { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
 .pd-btn-dark:hover { background: var(--ink-deep); border-color: var(--ink-deep); }
 .pd-btn-white { background: var(--surface); color: var(--ink); border-color: var(--surface); }
@@ -291,7 +301,7 @@ body {
 .pd-btn-outline:hover { background: var(--on-dark); color: var(--ink); }
 
 /* Squared tabs: 40px tall, 8px 16px padding, 4px radius, 14px uppercase with 0.8px tracking */
-.pd-tab { display: inline-flex; align-items: center; height: 40px; padding: 8px 16px; border-radius: 4px; border: 1px solid var(--faint); background: var(--faint); color: var(--ink); font-size: 14px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; line-height: 1; cursor: pointer; transition: background-color .18s, color .18s, border-color .18s; }
+.pd-tab { display: inline-flex; align-items: center; height: 40px; padding: 8px 16px; border-radius: 4px; border: 1px solid var(--faint); background: var(--faint); color: var(--ink); font-size: 0.875rem; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; line-height: 1; cursor: pointer; transition: background-color .18s, color .18s, border-color .18s; }
 .pd-tab:hover { background: var(--stone); border-color: var(--stone); }
 .pd-tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-dark); }
 
@@ -300,21 +310,21 @@ body {
 .pd-circle:hover { background: var(--ink); color: var(--on-dark); }
 
 /* Inputs: 4px radius, 1px border */
-.pd-input { border: 1px solid var(--stone); border-radius: 4px; font-size: 16px; color: var(--ink); outline: none; transition: border-color .18s; min-width: 0; }
+.pd-input { border: 1px solid var(--hairline); border-radius: 4px; font-size: 1rem; color: var(--ink); outline: none; transition: border-color .18s; min-width: 0; }
 .pd-input::placeholder { color: var(--muted); }
 .pd-input:focus { border-color: var(--ink); }
 
 /* NEW badge on product cards: dark pill, top-left */
-.pd-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 9999px; background: var(--ink); color: var(--on-dark); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
+.pd-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 9999px; background: var(--ink); color: var(--on-dark); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
 
 /* Product image box: light grey, photos multiply into it so white backgrounds vanish */
 .product-box { background: var(--box); }
 .product-box img { mix-blend-mode: multiply; }
 
 /* Photo tiles: dark gradient at the bottom, white uppercase label */
-.pd-tile-shade { background: linear-gradient(to top, rgba(28, 25, 23, 0.62) 0%, rgba(28, 25, 23, 0.18) 45%, rgba(28, 25, 23, 0) 70%); }
-.pd-tile-label { color: #fff; font-size: 24px; line-height: 1.1; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
-@media (min-width: 1024px) { .pd-tile-label { font-size: 32px; } }
+.pd-tile-shade { background: linear-gradient(to top, color-mix(in srgb, var(--ink-deep) 62%, transparent) 0%, color-mix(in srgb, var(--ink-deep) 18%, transparent) 45%, transparent 70%); }
+.pd-tile-label { color: var(--surface); font-size: 1.5rem; line-height: 1.1; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+@media (min-width: 1024px) { .pd-tile-label { font-size: 2rem; } }
 
 /* Best sellers carousel: Peak Design's fixed 328px cards 24px apart (3.7 visible at 1440px, the 4th cut off as a peek) */
 .carousel { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
@@ -323,11 +333,24 @@ body {
 @media (max-width: 639px) { .carousel-item { width: calc((100% - 24px) / 1.35); } }
 @media (min-width: 640px) and (max-width: 1023px) { .carousel-item { width: calc((100% - 24px * 2) / 2.5); } }
 
+/* Touch: the 40px chips and squared tabs grow to 44px where the pointer is a finger */
+@media (pointer: coarse) {
+  .chip, .pd-tab { height: 44px; }
+}
+
+/* Reduced motion: movement off, feedback kept. The scroll reveals, hero glide, magnetic button and the
+   rotating search hint already check the preference in JS; this covers the CSS-driven motion. Colour,
+   shadow and outline transitions stay, so hover and focus still answer. */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html, .carousel { scroll-behavior: auto; }
   .gloss:hover::after { animation: none; }
-  .carousel { scroll-behavior: auto; }
-  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  /* Photo and tile hover growth, the brand-card lift and its rising glow */
+  .group:hover img, .brand-card:hover, .brand-card:hover img { transform: none !important; }
+  .brand-card::after { transition: opacity .18s ease; transform: none; }
+  .brand-card img, .group img { transition-property: opacity; }
+  /* Product-card "+" and the search hint keep their end state without sliding */
+  .card .group-hover\:translate-y-0 { transition-property: opacity; }
+  .hero-stage button { transition-property: background-color, color, box-shadow; }
 }
 
 a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

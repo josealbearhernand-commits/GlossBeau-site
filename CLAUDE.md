@@ -38,8 +38,17 @@ I'm not very technical. Explain each step in plain language and tell me before r
   `/brands/[slug]` = products whose vendor matches (vendor:'…' query, slug from `brandSlug()`); `/hair-care` = hub
   of the hair collections because Shopify has no single hair-care collection; `/products/[handle]` = live photos,
   options, variants (cart not wired yet). "Show more" paginates with Shopify cursors (?after=).
-- Product photos: cards show Shopify photos in a grey 4:5 box, 80% fill, multiply blend. `npm run images` can
-  pre-trim white borders into `public/products/` + `src/data/trimmed.json` for any URL listed in home.ts (none now).
+- Product photos: ONE component `src/components/product/ProductImage.tsx` draws every card's photo (homepage carousel,
+  collections, brands, search, related): grey 4:5 box, photo centred in the inner 80%, multiply blend, never shown above 2×
+  its own pixels. `scripts/trim-images.mjs` (prebuild, `npm run images`) trims EVERY product's featured photo from the
+  Storefront API into `public/products/*.webp` (cap 800px) + `src/data/trimmed.json`; `resolvePhoto()` in shopify.ts picks
+  the trimmed copy or the CDN URL at width=800. Cached by URL: a build only processes new photos (679 cached 2026-10-04).
+- Cache: every Storefront fetch is tagged "shopify"; `POST /api/revalidate` (secret REVALIDATE_SECRET in production, none in
+  dev) drops it all. Run `curl -X POST http://localhost:3000/api/revalidate` after changing products or collections.
+- Jev (TypeSafe) helper for build scripts: `scripts/jev.mjs` (server-side only). Needs TYPESAFE_API_KEY in .env.local;
+  not set as of 2026-10-04, so the image audit used Claude's own vision and no Jev calls.
+- Image audit 2026-10-04: `design-system/review/image-replacements.csv` (OPI watermarks from other stores, small main
+  images, faded mains) and before/after card screenshots in `design-system/review/2026-10-04-cards/`.
 - Scroll effects copied from newadaranails.com (Wix float/slide/grow/fade): `src/components/motion/Reveal.tsx`.
 - Review screenshots: `design-system/review/` (Peak vs GlossBeau compares; `2026-10-04-hero/` = every hero slide
   at 1440 and 390 plus full pages). Shoot again with `tools/glossbeau-hero-shots.js <outDir>` (dev server running).
@@ -61,4 +70,7 @@ I'm not very technical. Explain each step in plain language and tell me before r
 - Screenshot helper: `C:\Users\beaut\.claude\projects\C--shopify-dev\tools\glossbeau-shots.js` (env ROUTE, MOTION).
 - Next, in the owner's order: owner reviews the hero → logo (wordmark + small mark; Higgsfield allowed;
   colour decided after seeing the owner's resources) → Storefront token → Netlify + glossbeau.com (Namecheap).
-- Impeccable skill could not be installed by Claude (blocked); owner installs it from github.com/pbakaus/impeccable.
+- Impeccable skill installed 2026-10-04 into `.claude/skills/impeccable` (project scope, `npx impeccable install`); run `/impeccable <command>`.
+  Audit 2026-10-04: 11/20 → 16/20 after adapt/harden/clarify/typeset/optimize/animate/polish (reports in
+  `design-system/review/`). Interim ordering: "Order by e-mail" (mailto with the item filled in) until the Storefront cart
+  is wired; `/search?q=` is a real route; products without a photo show the NoPhoto frame; `--hairline` token for 3:1 lines.

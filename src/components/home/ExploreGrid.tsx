@@ -11,9 +11,9 @@ export function ExploreGrid({ collections }: { collections: HomeCollection[] }) 
         <SectionHeading>Explore our products</SectionHeading>
       </div>
       <Reveal as="ul" stagger={0.07} effect="grow" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {collections.slice(0, 9).map((c, i) => (
+        {collections.slice(0, 9).map((c) => (
           <li key={c.handle}>
-            <CollectionTile href={`/collections/${c.handle}`} label={c.label} image={c.image} priority={i < 3} />
+            <CollectionTile href={`/collections/${c.handle}`} label={c.label} image={c.image} />
           </li>
         ))}
       </Reveal>

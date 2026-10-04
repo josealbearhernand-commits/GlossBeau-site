@@ -34,8 +34,8 @@ export function BrandGrid({ brands }: { brands?: Brand[] }) {
         <li className="min-w-0">
           <Link href="/brands" className="brand-card brand-card-more" aria-label={more != null ? `More brands, ${more} more` : "More brands"}>
             <span className="relative z-10 flex flex-col items-center gap-1 text-ink">
-              <span className="text-[16px] font-semibold leading-tight">More brands</span>
-              {more != null && <span className="tnum text-[14px] text-muted">({more})</span>}
+              <span className="text-[1rem] font-semibold leading-tight">More brands</span>
+              {more != null && <span className="tnum text-[0.875rem] text-muted">({more})</span>}
               <Icon name="arrowRight" size={18} className="mt-1" />
             </span>
           </Link>

@@ -9,6 +9,22 @@ const problems = [];
 const settings = fs.readFileSync(new URL("../src/config/site.ts", import.meta.url), "utf8");
 for (const m of settings.matchAll(/^\s*(\w+):\s*"(\[[A-Z][A-Z ]+\])"/gm)) problems.push(`src/config/site.ts › ${m[1]} is still ${m[2]}`);
 
+// Draft text and dead links in the components: "Placeholder copy", lorem ipsum, TODO copy, links to "#".
+const srcDir = new URL("../src/", import.meta.url);
+const walk = (dir) =>
+  fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
+    const p = new URL(d.name + (d.isDirectory() ? "/" : ""), dir);
+    return d.isDirectory() ? walk(p) : /\.(tsx?|md)$/.test(d.name) ? [p] : [];
+  });
+const draft = [/placeholder copy/i, /lorem ipsum/i, /\bTODO copy\b/i, /href=["']#["']/, /href: ["']#["']/];
+for (const file of walk(srcDir)) {
+  const text = fs.readFileSync(file, "utf8");
+  for (const re of draft) {
+    const m = text.match(re);
+    if (m) problems.push(`${decodeURIComponent(file.pathname).replace(/^.*\/src\//, "src/")} still contains “${m[0]}”`);
+  }
+}
+
 const policies = new URL("../content/policies.md", import.meta.url);
 if (fs.existsSync(policies)) {
   const text = fs.readFileSync(policies, "utf8");
