@@ -1,7 +1,7 @@
 # GlossBeau – project notes
 
-Domain: glossbeau.com (bought at Namecheap, connect at the end)
-Hosting: Netlify
+Domain: glossbeau.com (Namecheap DNS: A @ 75.2.60.5, CNAME www glossbeau.netlify.app; mail records untouched)
+Hosting: Netlify, LIVE since 2026-10-04 at https://glossbeau.com (project "glossbeau", team GlossBeau, site id 3d661db8-9c7f-4143-8720-85ccbdf7f024)
 Shopify store: [diamondprosalonsupply].myshopify.com
 Products come from the Shopify Headless storefront via the Storefront API.
 I will give you the access token when you ask. Keep it in a private .env file.
@@ -72,8 +72,12 @@ I'm not very technical. Explain each step in plain language and tell me before r
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
 - Brand grid under the hero copies the Diamond Pro brands wall; logos come from Shopify shop_images.
 - Screenshot helper: `C:\Users\beaut\.claude\projects\C--shopify-dev\tools\glossbeau-shots.js` (env ROUTE, MOTION).
-- Next, in the owner's order: owner reviews the hero → logo (wordmark + small mark; Higgsfield allowed;
-  colour decided after seeing the owner's resources) → Storefront token → Netlify + glossbeau.com (Namecheap).
+- Deploy: Netlify builds from GitHub main (webhook + deploy key, Next.js runtime plugin, publish .next). Env vars live in
+  Netlify (SHOPIFY_*, REVALIDATE_SECRET). Netlify's free plan only auto-builds commits authored by the Netlify account
+  email (diamondprosalon@gmail.com); commits from josealbearhernand@gmail.com are "unrecognized contributor" and need
+  `netlify api createSiteBuild --data '{"site_id":"3d661db8-9c7f-4143-8720-85ccbdf7f024"}'` or a local
+  `git config user.email diamondprosalon@gmail.com`. The repo is public. Site visibility was set to Public in the Netlify UI.
+  Local `netlify deploy --build` fails on Windows (plugin static publish); always build on Netlify.
 - Impeccable skill installed 2026-10-04 into `.claude/skills/impeccable` (project scope, `npx impeccable install`); run `/impeccable <command>`.
   Audit 2026-10-04: 11/20 → 16/20 after adapt/harden/clarify/typeset/optimize/animate/polish (reports in
   `design-system/review/`). `/search?q=` is a real route; products without a photo show the NoPhoto frame; `--hairline` token for 3:1 lines.
