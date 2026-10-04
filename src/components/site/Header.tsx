@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Icon } from "./Icon";
 import { Logo } from "./Logo";
+import { site } from "@/config/site";
 
 const links = [
   // Hair care has no single Shopify collection: /hair-care lists the hair collections. The rest are exact handles.
@@ -149,9 +150,9 @@ export function Header() {
         <div className="mx-6 hidden w-full min-w-0 max-w-[412px] shrink lg:block xl:mx-10 xl:ml-auto">{search}</div>
 
         <div className="flex h-full items-center lg:ml-auto xl:ml-0">
-          <Link href="#" className="hidden h-full items-center px-4 text-[16px] text-ink hover:text-muted lg:flex">
+          <a href={`mailto:${site.supportEmail}`} className="hidden h-full items-center px-4 text-[16px] text-ink hover:text-muted lg:flex">
             Support
-          </Link>
+          </a>
           <Link href="#" aria-label="Account" className="grid h-full w-14 place-items-center text-ink hover:text-muted">
             <Icon name="user" size={24} />
           </Link>

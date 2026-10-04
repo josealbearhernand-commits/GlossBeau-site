@@ -24,6 +24,11 @@ I'm not very technical. Explain each step in plain language and tell me before r
   each component's comment): Peak-style header (40px strip + 80px nav, rotating search placeholder),
   Best sellers tabs + carousel, Explore 3×3 tiles, What's new dark panel, company tiles + featured split,
   pro-pricing panel, Peak-style footer. Serif headings = Fraunces, mono variant line = Geist Mono.
+- Policies: `content/policies.md` (GlossBeau's own text, never the Shopify store policies) → /policies/shipping,
+  /refunds, /privacy, /terms via `src/lib/policies.ts` (split on "## " headings, e-mails become mailto links).
+  Company name, support e-mail and address live ONLY in `src/config/site.ts` (used by policies, header Support
+  link, footer). No phone number anywhere, no social icons. `scripts/check-placeholders.mjs` runs before every
+  build: warns locally, fails a Netlify production build if any [BRACKET] placeholder is left.
 - Logo: ONE component `src/components/site/Logo.tsx` (header, footer, under the hero). Swap the real logo there.
 - Catalog: LIVE from the Shopify Storefront API only (`src/lib/shopify.ts`); there is no sample catalog. Needs
   `.env.local` with SHOPIFY_STORE_DOMAIN + SHOPIFY_STOREFRONT_ACCESS_TOKEN (see `.env.example`). Without it (or on

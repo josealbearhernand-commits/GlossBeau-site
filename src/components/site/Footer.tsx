@@ -1,15 +1,16 @@
 import Link from "next/link";
-import { Icon } from "./Icon";
 import { Logo } from "./Logo";
 import { EmailForm } from "./EmailForm";
+import { site } from "@/config/site";
 
 const cols = [
   {
     title: "Support",
     links: [
-      ["Shipping and returns", "#"],
+      ["Shipping and returns", "/policies/refunds"],
+      ["Shipping policy", "/policies/shipping"],
       ["Track an order", "#"],
-      ["Contact us", "#"],
+      ["Contact us", `mailto:${site.supportEmail}`],
       ["FAQ", "#"],
     ],
   },
@@ -19,7 +20,7 @@ const cols = [
       ["Our story", "#"],
       ["Brands we carry", "/brands"],
       ["Professionals", "/#pro"],
-      ["Privacy", "#"],
+      ["Privacy", "/policies/privacy"],
     ],
   },
   {
@@ -74,30 +75,22 @@ export function Footer() {
       </div>
 
       <div className="container-pd pb-5 lg:pb-16">
-        <div className="grid items-center gap-6 border-t border-faint pt-8 text-center lg:grid-cols-3 lg:text-left">
+        <div className="grid items-center gap-6 border-t border-faint pt-8 text-center lg:grid-cols-2 lg:text-left">
           <ul className="order-3 flex justify-center gap-6 lg:order-1 lg:justify-start">
             <li>
-              <Link href="#" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
+              <Link href="/policies/privacy" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
                 Privacy
               </Link>
             </li>
             <li>
-              <Link href="#" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
+              <Link href="/policies/terms" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
                 Terms
               </Link>
             </li>
           </ul>
           <div className="order-1 flex flex-col items-center justify-center gap-4 lg:order-2 lg:flex-row lg:gap-10">
             <Logo size={22} href="/" />
-            <p className="text-[16px] leading-5 text-muted">© 2026 GlossBeau.</p>
-          </div>
-          <div className="order-2 flex justify-center gap-4 lg:order-3 lg:justify-end">
-            <a href="#" aria-label="Instagram" className="grid size-10 place-items-center text-ink hover:text-muted">
-              <Icon name="instagram" size={24} />
-            </a>
-            <a href="#" aria-label="TikTok" className="grid size-10 place-items-center text-ink hover:text-muted">
-              <Icon name="tiktok" size={24} />
-            </a>
+            <p className="text-[16px] leading-5 text-muted">© {new Date().getFullYear()} {site.brand} · {site.legalName}</p>
           </div>
         </div>
       </div>
