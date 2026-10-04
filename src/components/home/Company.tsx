@@ -37,9 +37,10 @@ export function Company() {
 
       <section className="pd-section container-pd">
         <Reveal effect="float" className="grid overflow-hidden rounded-[8px] lg:grid-cols-[2fr_1fr]">
-          <div className="relative aspect-[16/9] bg-faint">
-            {/* The BaBylissPRO tools photo from the Diamond Pro hero slider (shop_images/hero-14-clean.jpg, full 1920×1080 original) */}
-            <Image src="/images/babyliss-tools.jpg" alt="BaBylissPRO Nano Titanium flat irons and dryers" fill sizes="(min-width: 1024px) 66vw, 100vw" className="object-cover" />
+          <div className="relative aspect-[123/95] bg-[#262a31]">
+            {/* The BaBylissPRO tools from the Diamond Pro hero slider (shop_images/hero-14-clean.jpg, 1920×1080 original),
+                cropped to the tools (1230×950) so they sit centred; the box takes that same shape. */}
+            <Image src="/images/babyliss-tools-centered.jpg" alt="BaBylissPRO Nano Titanium flat irons and dryers" fill sizes="(min-width: 1024px) 66vw, 100vw" className="object-cover" />
           </div>
           <div className="on-dark flex items-center bg-slate-ink p-8 text-on-dark lg:p-16">
             <div className="flex flex-col gap-6">

@@ -43,7 +43,7 @@ I'm not very technical. Explain each step in plain language and tell me before r
   (approved Higgsfield takes in `public/videos/`, posters in `public/stills/`) + the New Adara campaign portrait
   (`public/images/new-adara-gloss-society.jpg`). On desktop the 4:3 clips show whole with a blurred copy of the
   still filling the sides, so no bottle is cut. Arrows only, no dots. Unused takes in `media-archive/`.
-- Site photos saved locally in `public/images/`: BaBylissPRO tools (Diamond Pro hero-14), Gloss Society Kit
+- Site photos saved locally in `public/images/`: BaBylissPRO tools (Diamond Pro hero-14, cropped to the tools), Gloss Society Kit
   contents (What's new feature, pinned in `src/data/home.ts`, not replaced by live data).
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
 - Brand grid under the hero copies the Diamond Pro brands wall; logos come from Shopify shop_images.
