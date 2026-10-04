@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, reducedMotion } from "@/components/motion/gsap";
@@ -24,14 +23,13 @@ const HOLD_MS = 5000;
 const GLIDE_S = 1.6;
 
 const key = (s: HeroSlide) => ("product" in s ? s.product.handle : s.image);
-const linkOf = (s: HeroSlide) => ("product" in s ? { href: `/products/${s.product.handle}`, title: s.product.title } : { href: s.href, title: s.title });
 
 /**
- * Hero slideshow, sized like Peak Design's hero (measured 2026-10-04): a square-edged block that
- * runs edge to edge, 1440 × 727 on desktop and 390 × 397 on phones (Peak's phone hero is that photo
- * plus a 360px text panel; ours has no text panel). One slide at a time: a product slide plays its
- * pour clip, then the next slide glides in slowly; a photo slide holds 5 seconds. Arrows only; the
- * show pauses while hovered or when the tab is hidden.
+ * Hero slideshow: a square-edged block that runs edge to edge, 600px tall on desktop (never more than
+ * 70% of the screen height) and 420px on phones. One slide at a time: a product slide plays its pour
+ * clip, then the next slide glides in slowly; a photo slide holds 5 seconds. Arrows only; the show
+ * pauses while hovered or when the tab is hidden. No scale or zoom is ever applied to the slides, so
+ * the clips (1112×834) and photos stay as sharp as their source.
  */
 export function Hero({ slides }: { slides: HeroSlide[] }) {
   const ref = useRef<HTMLElement>(null);
@@ -54,7 +52,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
         return;
       }
       animating.current = true;
-      gsap.set(to, { autoAlpha: 1, xPercent: 12 * dir, scale: 1.04 });
+      gsap.set(to, { autoAlpha: 1, xPercent: 12 * dir });
       gsap
         .timeline({
           defaults: { duration: GLIDE_S, ease: "power2.inOut" },
@@ -63,8 +61,8 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
             setIndex(target);
           },
         })
-        .to(from, { xPercent: -12 * dir, scale: 1.04, autoAlpha: 0 }, 0)
-        .to(to, { xPercent: 0, scale: 1 }, 0);
+        .to(from, { xPercent: -12 * dir, autoAlpha: 0 }, 0)
+        .to(to, { xPercent: 0 }, 0);
     },
     [index, count],
   );
@@ -109,12 +107,10 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
     { scope: ref },
   );
 
-  const current = linkOf(slides[index]);
-
   return (
     <section ref={ref} className="flex flex-col items-center pb-4">
       <div
-        className="hero-stage relative aspect-[390/397] w-full overflow-hidden bg-surface lg:aspect-[1440/727]"
+        className="hero-stage relative h-[420px] w-full overflow-hidden bg-[#e9e2d9] lg:h-[min(600px,70svh)]"
         onPointerEnter={() => setPaused(true)}
         onPointerLeave={() => setPaused(false)}
         aria-roledescription="carousel"
@@ -130,9 +126,9 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
           >
             {"video" in s ? (
               <>
-                {/* Desktop: the 4:3 clip is taller than the 2:1 hero, so it shows whole (contain) and a blurred
-                    copy of its own still fills the sides. Phones (390×397) are nearly square, so the clip covers. */}
-                <Image src={s.poster} alt="" fill aria-hidden sizes="100vw" className="hidden scale-110 object-cover blur-2xl lg:block" />
+                {/* Desktop: the 4:3 clip is taller than the hero, so it shows whole (contain) and a blurred copy
+                    of its own still fills the sides. Phones (390×420) are nearly square, so the clip covers. */}
+                <Image src={s.poster} alt="" fill aria-hidden sizes="100vw" quality={60} className="hidden object-cover blur-2xl lg:block" />
                 <video
                   src={s.video}
                   poster={s.poster}
@@ -148,7 +144,8 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
                 src={s.image}
                 alt={s.alt}
                 fill
-                priority={i === 0}
+                priority
+                quality={90}
                 sizes="100vw"
                 className="object-cover"
                 style={{ objectPosition: s.focus ?? "50% 50%" }}
@@ -174,13 +171,6 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
           <Icon name="caretDown" size={18} className="-rotate-90" />
         </button>
 
-        <Link
-          href={current.href}
-          className="absolute bottom-4 left-4 grid size-12 place-items-center rounded-full bg-accent text-on-accent shadow-[var(--shadow-accent)] transition-colors hover:bg-accent-deep lg:bottom-8 lg:left-8"
-          aria-label={`View ${current.title}`}
-        >
-          <Icon name="arrowUpRight" size={20} />
-        </Link>
       </div>
 
       <div className="hero-mark mt-8 flex flex-col items-center">

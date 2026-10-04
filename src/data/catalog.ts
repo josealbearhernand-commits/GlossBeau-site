@@ -515,7 +515,7 @@ export const brands = brandLogos.map((b) => b.name);
  * Hero slideshow, in the owner's order. A product slide plays its approved Higgsfield clip
  * (`video`, with `poster` as the still); an image slide is a plain photo with its own link.
  * `focus` is the CSS object-position used when the slide is cropped to the hero's shape
- * (1440×727 on desktop, 390×397 on phones); default is centre.
+ * (600px tall on desktop, 420px on phones, full width); default is centre.
  */
 export type HeroSlideData =
   | { handle: string; video: string; poster: string; focus?: string }
@@ -530,11 +530,12 @@ export const heroSlides: HeroSlideData[] = [
   { handle: "nirvel-professional-silver-shampoo-moisturizing-250ml-for-gray-hair", video: "/videos/silver-A2.mp4", poster: "/stills/silver-poster.jpg" },
   {
     // New Adara Nails campaign photo (the Gloss Society Kit's cover photo in Shopify; full-size original from newadaranails.com)
-    image: "/images/new-adara-gloss-society.jpg",
+    // Full-resolution crop (3302×2300) of the 3302×5331 original, the band with her eye and the bottles
+    image: "/images/new-adara-gloss-society-wide.jpg",
     alt: "A woman holding New Adara gel polish bottles in front of her face",
     href: "/collections/new-adara",
     title: "New Adara Nails",
-    focus: "50% 38%",
+    focus: "80% 25%",
   },
 ];
 

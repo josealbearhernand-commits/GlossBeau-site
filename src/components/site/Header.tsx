@@ -106,10 +106,9 @@ export function Header() {
   return (
     <header className="sticky top-[-40px] z-40 bg-surface">
       {/* Announcement strip: 40px, like peakdesign.com's "Our mission / Find a store" strip */}
-      <div className="grid h-10 grid-cols-[1fr_auto_1fr] items-center bg-surface px-2 text-[14px] uppercase tracking-[0.04em] text-ink lg:px-10">
-        <span className="hidden lg:block">Free US shipping on orders over $75</span>
-        <span className="col-start-2 lg:hidden">Free US shipping over $75</span>
-        <a href="#pro" className="hidden text-right hover:underline hover:underline-offset-4 lg:block">
+      <div className="flex h-10 items-center justify-center gap-6 whitespace-nowrap bg-surface px-4 text-[14px] uppercase tracking-[0.04em] text-ink lg:justify-between lg:px-10">
+        <span className="shrink-0">Free US shipping on orders over $75</span>
+        <a href="#pro" className="hidden shrink-0 text-right hover:underline hover:underline-offset-4 lg:block">
           Pro pricing for licensed stylists
         </a>
       </div>
@@ -146,7 +145,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="mx-10 hidden w-[412px] shrink-0 lg:block xl:ml-auto">{search}</div>
+        <div className="mx-6 hidden w-full min-w-0 max-w-[412px] shrink lg:block xl:mx-10 xl:ml-auto">{search}</div>
 
         <div className="flex h-full items-center lg:ml-auto xl:ml-0">
           <Link href="#" className="hidden h-full items-center px-4 text-[16px] text-ink hover:text-muted lg:flex">

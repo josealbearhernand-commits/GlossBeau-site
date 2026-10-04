@@ -42,8 +42,8 @@ const cols = [
 export function Footer() {
   return (
     <footer className="bg-canvas text-ink">
-      <div className="container-pd grid gap-12 py-5 lg:grid-cols-[1fr_560px] lg:gap-16 lg:py-16">
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:mt-8 lg:grid-cols-[224px_224px_224px]">
+      <div className="container-pd grid gap-12 py-5 lg:grid-cols-[1fr_minmax(0,560px)] lg:gap-16 lg:py-16">
+        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:mt-8 lg:grid-cols-[repeat(3,minmax(0,224px))]">
           {cols.map((c) => (
             <div key={c.title}>
               <h2 className="mb-6 text-[16px] font-semibold uppercase leading-none tracking-[0.02em] lg:text-[24px]">{c.title}</h2>

@@ -38,11 +38,12 @@ I'm not very technical. Explain each step in plain language and tell me before r
 - Look: Shop-style layout (28px soft cards, pills, Inter) on linen #f6f1eb, walnut #403a34 text, one accent
   Apricot clay #d4784e. Tokens in `src/app/globals.css`; the live design system is
   https://claude.ai/artifact/FmpZLez9iDpkmvWzpPKGxT and its source files are in `design-system/project/`.
-- Hero: square-edged, edge to edge, sized like peakdesign.com's hero (1440×727 desktop, 390×397 phone; Peak's
-  phone hero is that photo + a 360px text panel). 7 slides in `src/data/catalog.ts` `heroSlides`: 6 product clips
-  (approved Higgsfield takes in `public/videos/`, posters in `public/stills/`) + the New Adara campaign portrait
-  (`public/images/new-adara-gloss-society.jpg`). On desktop the 4:3 clips show whole with a blurred copy of the
-  still filling the sides, so no bottle is cut. Arrows only, no dots. Unused takes in `media-archive/`.
+- Hero: square-edged, edge to edge, 600px tall on desktop (max 70% of the screen height) and 420px on phones.
+  7 slides in `src/data/catalog.ts` `heroSlides`: 6 product clips (1112×834 approved Higgsfield takes in
+  `public/videos/`, 1600×1200 posters in `public/stills/`) + the New Adara campaign portrait
+  (`public/images/new-adara-gloss-society-wide.jpg`, a 3302×2300 full-resolution crop of the 3302×5331 original;
+  its hands are soft in the photo itself). On desktop the 4:3 clips show whole with a blurred copy of the still
+  filling the sides, so no bottle is cut. Arrows only: no dots, no link button, no scale/zoom on the slides.
 - Site photos saved locally in `public/images/`: BaBylissPRO tools (Diamond Pro hero-14, cropped to the tools), Gloss Society Kit
   contents (What's new feature, pinned in `src/data/home.ts`, not replaced by live data).
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
