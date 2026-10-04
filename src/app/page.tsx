@@ -5,22 +5,27 @@ import { ExploreGrid } from "@/components/home/ExploreGrid";
 import { WhatsNew } from "@/components/home/WhatsNew";
 import { Company } from "@/components/home/Company";
 import { ProPanel } from "@/components/home/ProPanel";
-import { byHandle, heroSlides } from "@/data/catalog";
+import { CatalogError, tryCatalog } from "@/components/site/CatalogError";
+import { exploreCollections, whatsNew } from "@/data/home";
+import { heroSlides } from "@/data/hero";
 import { getHomeData } from "@/lib/shopify";
 
 export const revalidate = 300;
 
 export default async function Home() {
-  const slides = heroSlides.map((s) => ("handle" in s ? { ...s, product: byHandle(s.handle)! } : s));
-  const data = await getHomeData();
+  const { data, error } = await tryCatalog(getHomeData);
 
   return (
     <>
-      <Hero slides={slides} />
-      <BrandGrid vendors={data.vendors} />
-      <BestSellers products={data.bestSellers} now={data.now} />
-      <ExploreGrid collections={data.collections} />
-      <WhatsNew image={data.whatsNew.image} href={data.whatsNew.href} title={data.whatsNew.title} />
+      <Hero slides={heroSlides} />
+      <BrandGrid brands={data?.brands} />
+      {data ? (
+        <BestSellers products={data.bestSellers} now={data.now} />
+      ) : (
+        <CatalogError error={error} title="Best sellers could not be loaded" />
+      )}
+      <ExploreGrid collections={exploreCollections} />
+      <WhatsNew image={whatsNew.image} href={whatsNew.href} title={whatsNew.title} />
       <Company />
       <ProPanel />
     </>

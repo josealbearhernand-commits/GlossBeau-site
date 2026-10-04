@@ -2,14 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/motion/Reveal";
 import { Icon } from "@/components/site/Icon";
-import { featuredBrands, moreBrandCount } from "@/data/home";
+import { featuredBrands } from "@/data/home";
+import type { Brand } from "@/lib/shopify";
 
 /**
  * The brands wall: 11 featured brands in the owner's order, plus a 12th "More brands (X)" tile in
- * the same style, so the grid is a full 6 × 2 on desktop. X is counted from the Shopify vendor list.
+ * the same style, so the grid is a full 6 × 2 on desktop. X is counted from the live Shopify vendor list
+ * (every brand not shown above); without Shopify the tile just says "More brands".
  */
-export function BrandGrid({ vendors }: { vendors?: string[] }) {
-  const more = moreBrandCount(vendors);
+export function BrandGrid({ brands }: { brands?: Brand[] }) {
+  const shown = new Set(featuredBrands.map((b) => b.vendor.toLowerCase()));
+  const more = brands ? brands.filter((b) => !shown.has(b.vendor.toLowerCase())).length : null;
   return (
     <section id="brands" className="page scroll-mt-32 pt-14 lg:pt-16">
       <div className="mb-8 text-center">
@@ -29,10 +32,10 @@ export function BrandGrid({ vendors }: { vendors?: string[] }) {
           </li>
         ))}
         <li className="min-w-0">
-          <Link href="/brands" className="brand-card brand-card-more" aria-label={`More brands, ${more} more`}>
+          <Link href="/brands" className="brand-card brand-card-more" aria-label={more != null ? `More brands, ${more} more` : "More brands"}>
             <span className="relative z-10 flex flex-col items-center gap-1 text-ink">
               <span className="text-[16px] font-semibold leading-tight">More brands</span>
-              <span className="tnum text-[14px] text-muted">({more})</span>
+              {more != null && <span className="tnum text-[14px] text-muted">({more})</span>}
               <Icon name="arrowRight" size={18} className="mt-1" />
             </span>
           </Link>

@@ -17,7 +17,7 @@ const cols = [
     title: "About",
     links: [
       ["Our story", "#"],
-      ["Brands we carry", "/#brands"],
+      ["Brands we carry", "/brands"],
       ["Professionals", "/#pro"],
       ["Privacy", "#"],
     ],
@@ -25,7 +25,7 @@ const cols = [
   {
     title: "Shop",
     links: [
-      ["Hair care", "/collections/hair-care"],
+      ["Hair care", "/hair-care"],
       ["Nails", "/collections/nails"],
       ["Barber", "/collections/barber"],
       ["Tools", "/collections/tools-accessories"],

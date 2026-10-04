@@ -15,13 +15,9 @@ const outDir = path.join(root, "public", "products");
 const manifestPath = path.join(root, "src", "data", "trimmed.json");
 const base = "https://cdn.shopify.com/s/files/1/0752/7546/8972/";
 
-// Product photos only (collection tiles and banners are not trimmed):
-//   src/data/home.ts     f("file.jpg?v=1")      -> base + "files/" + file
-//   src/data/catalog.ts  cdn + "file.jpg?v=1"   -> base + "files/" + file
-const sources = [
-  { file: path.join(root, "src", "data", "home.ts"), pattern: /\bf\("([^"]+)"\)/g },
-  { file: path.join(root, "src", "data", "catalog.ts"), pattern: /cdn \+ "([^"]+)"/g },
-];
+// Product photos only (collection tiles and banners are not trimmed). Products now come live from
+// Shopify, so there is nothing to pre-trim unless a file lists photo URLs as f("file.jpg?v=1").
+const sources = [{ file: path.join(root, "src", "data", "home.ts"), pattern: /\bf\("([^"]+)"\)/g }];
 const urls = new Set();
 for (const { file, pattern } of sources) {
   const text = await fs.readFile(file, "utf8").catch(() => "");

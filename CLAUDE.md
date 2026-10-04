@@ -25,11 +25,16 @@ I'm not very technical. Explain each step in plain language and tell me before r
   Best sellers tabs + carousel, Explore 3×3 tiles, What's new dark panel, company tiles + featured split,
   pro-pricing panel, Peak-style footer. Serif headings = Fraunces, mono variant line = Geist Mono.
 - Logo: ONE component `src/components/site/Logo.tsx` (header, footer, under the hero). Swap the real logo there.
-- Homepage data: `src/data/home.ts` snapshot (vendors, 11 featured brands, best sellers per tab, 9 explore
-  collections). `src/lib/shopify.ts` `getHomeData()` switches to live Storefront data once the token exists.
-  "More brands (X)" is computed from the Shopify vendor list, never typed by hand.
-- Product photos: `npm run images` (also runs before build) trims white borders with sharp into
-  `public/products/` + `src/data/trimmed.json`; cards show them in a grey 4:5 box, 80% fill, multiply blend.
+- Catalog: LIVE from the Shopify Storefront API only (`src/lib/shopify.ts`); there is no sample catalog. Needs
+  `.env.local` with SHOPIFY_STORE_DOMAIN + SHOPIFY_STOREFRONT_ACCESS_TOKEN (see `.env.example`). Without it (or on
+  any Shopify error) pages show the `CatalogError` message, never products. `src/data/home.ts` is config only
+  (tabs, 11 featured brands with exact Shopify vendor names, explore collections, hair-care hub list, What's new).
+- Routes: `/collections/[handle]` = exactly one Shopify collection; `/brands` = every vendor A–Z with counts;
+  `/brands/[slug]` = products whose vendor matches (vendor:'…' query, slug from `brandSlug()`); `/hair-care` = hub
+  of the hair collections because Shopify has no single hair-care collection; `/products/[handle]` = live photos,
+  options, variants (cart not wired yet). "Show more" paginates with Shopify cursors (?after=).
+- Product photos: cards show Shopify photos in a grey 4:5 box, 80% fill, multiply blend. `npm run images` can
+  pre-trim white borders into `public/products/` + `src/data/trimmed.json` for any URL listed in home.ts (none now).
 - Scroll effects copied from newadaranails.com (Wix float/slide/grow/fade): `src/components/motion/Reveal.tsx`.
 - Review screenshots: `design-system/review/` (Peak vs GlossBeau compares; `2026-10-04-hero/` = every hero slide
   at 1440 and 390 plus full pages). Shoot again with `tools/glossbeau-hero-shots.js <outDir>` (dev server running).
@@ -48,8 +53,6 @@ I'm not very technical. Explain each step in plain language and tell me before r
   contents (What's new feature, pinned in `src/data/home.ts`, not replaced by live data).
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
 - Brand grid under the hero copies the Diamond Pro brands wall; logos come from Shopify shop_images.
-- Preview data: `src/data/catalog.ts` (real products). Live data: `src/lib/shopify.ts` once
-  `SHOPIFY_STOREFRONT_TOKEN` is in `.env.local` (see `.env.example`).
 - Screenshot helper: `C:\Users\beaut\.claude\projects\C--shopify-dev\tools\glossbeau-shots.js` (env ROUTE, MOTION).
 - Next, in the owner's order: owner reviews the hero → logo (wordmark + small mark; Higgsfield allowed;
   colour decided after seeing the owner's resources) → Storefront token → Netlify + glossbeau.com (Namecheap).

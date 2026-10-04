@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { money, type Product } from "@/data/catalog";
+import { money } from "@/data/home";
+import type { ShopProduct } from "@/lib/shopify";
 import { Icon } from "@/components/site/Icon";
 
 /** Shop-style elevated card: 28px radius, dual soft shadow, 20px inner image radius, no border. */
-export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
+export function ProductCard({ product, priority = false }: { product: ShopProduct; priority?: boolean }) {
   const sold = !product.availableForSale;
   const onSale = product.compareAtPrice != null && !sold;
   return (
@@ -27,8 +28,6 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           <span className="badge badge-soldout absolute left-3 top-3">Sold out</span>
         ) : onSale ? (
           <span className="badge badge-sale absolute left-3 top-3">Sale</span>
-        ) : product.featured ? (
-          <span className="badge absolute left-3 top-3">Best seller</span>
         ) : null}
         <span className="absolute bottom-3 right-3 grid size-10 translate-y-2 place-items-center rounded-full bg-accent text-on-accent opacity-0 shadow-[var(--shadow-accent)] transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100" aria-hidden="true">
           <Icon name="plus" size={18} />

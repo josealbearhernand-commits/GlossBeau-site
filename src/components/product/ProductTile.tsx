@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { isNew, money, variantLine, type HomeProduct } from "@/data/home";
+import { isNew, money, variantLine } from "@/data/home";
+import type { ShopProduct } from "@/lib/shopify";
 import trimmed from "@/data/trimmed.json";
 
 type Trimmed = Record<string, { src: string; width: number; height: number }>;
@@ -20,7 +21,7 @@ export function trimmedImage(url: string) {
  * the box height (tall bottles) or 80% of the width (wide jars and tools), whichever comes first.
  * `mix-blend-mode: multiply` makes the photo's white background disappear into the grey box.
  */
-export function ProductTile({ product, priority = false, now }: { product: HomeProduct; priority?: boolean; now?: number }) {
+export function ProductTile({ product, priority = false, now }: { product: ShopProduct; priority?: boolean; now?: number }) {
   const img = trimmedImage(product.image);
   const line = variantLine(product);
   const fresh = isNew(product.createdAt, now);

@@ -6,7 +6,7 @@ import { SectionHeading } from "./SectionHeading";
 
 const tiles = [
   { label: "Our story", href: "#", image: "/stills/silver-poster.jpg" },
-  { label: "Brands we carry", href: "/#brands", image: "/stills/thermoliss-poster.jpg" },
+  { label: "Brands we carry", href: "/brands", image: "/stills/thermoliss-poster.jpg" },
   {
     label: "Contact",
     href: "#",
@@ -55,7 +55,7 @@ export function Company() {
                 </p>
               </div>
               <div>
-                <Link href="/#brands" className="pd-btn pd-btn-lg pd-btn-outline">
+                <Link href="/brands" className="pd-btn pd-btn-lg pd-btn-outline">
                   Meet the brands
                 </Link>
               </div>

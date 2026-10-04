@@ -6,11 +6,10 @@ import { useGSAP } from "@gsap/react";
 import { gsap, reducedMotion } from "@/components/motion/gsap";
 import { Icon } from "@/components/site/Icon";
 import { Logo } from "@/components/site/Logo";
-import type { Product } from "@/data/catalog";
-
 export type HeroSlide =
   | {
-      product: Product;
+      handle: string;
+      title: string;
       /** Higgsfield clip (mp4): plays once, then the show glides to the next slide. */
       video: string;
       /** Approved still used as the poster and reduced-motion fallback. */
@@ -22,7 +21,7 @@ export type HeroSlide =
 const HOLD_MS = 5000;
 const GLIDE_S = 1.6;
 
-const key = (s: HeroSlide) => ("product" in s ? s.product.handle : s.image);
+const key = (s: HeroSlide) => ("handle" in s ? s.handle : s.image);
 
 /**
  * Hero slideshow: a square-edged block that runs edge to edge, 600px tall on desktop (never more than

@@ -1,28 +1,37 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { byHandle, byCategory, categories, money, products } from "@/data/catalog";
+import { CatalogError, tryCatalog } from "@/components/site/CatalogError";
 import { ProductCard } from "@/components/product/ProductCard";
+import { ProductGallery } from "@/components/product/ProductGallery";
 import { Reveal } from "@/components/motion/Reveal";
-import { Magnetic } from "@/components/motion/Magnetic";
 import { Icon } from "@/components/site/Icon";
-import { ProductForm } from "@/components/product/ProductForm";
+import { brandDisplayName, brandSlug } from "@/data/home";
+import { getProduct, searchProducts } from "@/lib/shopify";
 
-export function generateStaticParams() {
-  return products.map((p) => ({ handle: p.handle }));
+export const revalidate = 300;
+
+type Params = Promise<{ handle: string }>;
+
+export async function generateMetadata({ params }: { params: Params }) {
+  const { handle } = await params;
+  const { data } = await tryCatalog(() => getProduct(handle));
+  return { title: data?.title ?? "Product" };
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }) {
+/** One Shopify product: its photos, price, options and variants, plus four more from the same brand. */
+export default async function ProductPage({ params }: { params: Params }) {
   const { handle } = await params;
-  return { title: byHandle(handle)?.title ?? "Product" };
-}
-
-export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
-  const { handle } = await params;
-  const p = byHandle(handle);
-  if (!p) notFound();
-  const cat = categories.find((c) => c.slug === p.category)!;
-  const related = byCategory(p.category).filter((x) => x.handle !== p.handle).slice(0, 4);
+  const result = await tryCatalog(async () => {
+    const product = await getProduct(handle);
+    if (!product) return null;
+    const more = await searchProducts(`vendor:'${product.vendor.replace(/'/g, "\\'")}'`, 8);
+    return { product, related: more.items.filter((p) => p.handle !== product.handle).slice(0, 4) };
+  });
+  if (result.error) return <CatalogError error={result.error} title="This product could not be loaded" />;
+  if (!result.data) notFound();
+  const { product, related } = result.data;
+  const brand = brandDisplayName(product.vendor);
+  const brandHref = `/brands/${brandSlug(product.vendor)}`;
 
   return (
     <div className="page pt-8 lg:pt-12">
@@ -31,75 +40,42 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
           Home
         </Link>{" "}
         /{" "}
-        <Link href={`/collections/${cat.slug}`} className="hover:text-ink">
-          {cat.name}
+        <Link href={brandHref} className="hover:text-ink">
+          {brand}
         </Link>{" "}
-        / {p.title}
+        / {product.title}
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
-        <Reveal mode="block" className="card gloss relative aspect-[4/5] lg:sticky lg:top-24 lg:self-start">
-          <Image src={p.image} alt={p.title} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-contain p-10" />
-          {p.featured && <span className="badge badge-feature absolute left-4 top-4">Best seller</span>}
-        </Reveal>
-
-        <div className="flex flex-col gap-8">
-          <div className="flex flex-col gap-3">
-            <p className="t-eyebrow text-ink">
-              {p.vendor} · {p.type}
-            </p>
-            <Reveal as="h1" className="t-heading text-ink">
-              {p.title}
-            </Reveal>
-            <p className="tnum t-lead text-ink">{money(p.price)}</p>
-          </div>
-
-          <p className="t-body max-w-[52ch] text-ink">{p.description}</p>
-
-          {p.benefits && (
-            <ul className="flex flex-wrap gap-2">
-              {p.benefits.map((b) => (
-                <li key={b} className="chip pointer-events-none">
-                  {b}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <ProductForm sizes={p.sizes} available={p.availableForSale} />
-
-          <ul className="divide-y divide-faint border-y border-faint">
-            {[
-              ["truck", "Free US shipping over $75. Ships in 1–2 business days."],
-              ["shieldCheck", "Authentic stock from the brand's US distributor."],
-              ["leaf", "Vegan formula where the brand states it."],
-            ].map(([icon, text]) => (
-              <li key={text} className="t-body-sm flex items-center gap-4 py-4 text-ink">
-                <Icon name={icon as "truck"} size={22} />
-                {text}
-              </li>
-            ))}
-          </ul>
-
-          <Magnetic>
-            <Link href={`/collections/${cat.slug}`} className="link t-ui">
-              More {cat.name.toLowerCase()}
-            </Link>
-          </Magnetic>
-        </div>
+        <ProductGallery product={product} />
       </div>
+
+      <ul className="mt-10 divide-y divide-faint border-y border-faint lg:max-w-[52ch]">
+        {[
+          ["truck", "Free US shipping over $75. Ships in 1–2 business days."],
+          ["shieldCheck", "Authentic stock from the brand's US distributor."],
+        ].map(([icon, text]) => (
+          <li key={text} className="t-body-sm flex items-center gap-4 py-4 text-ink">
+            <Icon name={icon as "truck"} size={22} />
+            {text}
+          </li>
+        ))}
+      </ul>
 
       {related.length > 0 && (
         <section className="pt-24 lg:pt-32">
           <div className="mb-10 flex items-end justify-between gap-6">
             <Reveal as="h2" className="t-heading-lg text-ink">
-              Pairs well with
+              More from {brand}
             </Reveal>
+            <Link href={brandHref} className="link t-ui">
+              All {brand}
+            </Link>
           </div>
           <ul className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
             {related.map((r, i) => (
               <li key={r.handle} className="min-w-0">
-                <Reveal mode="block" delay={i * 0.07}>
+                <Reveal effect="float" delay={i * 0.07}>
                   <ProductCard product={r} />
                 </Reveal>
               </li>

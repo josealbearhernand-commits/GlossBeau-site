@@ -5,7 +5,8 @@ import { Icon } from "@/components/site/Icon";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductTile } from "@/components/product/ProductTile";
 import { SectionHeading } from "./SectionHeading";
-import { tabs, type HomeProduct, type Tab } from "@/data/home";
+import { tabs, type Tab } from "@/data/home";
+import type { ShopProduct } from "@/lib/shopify";
 
 /**
  * Peak Design "Best sellers": serif heading + rule (40px below), squared tabs (40px tall, 4px radius,
@@ -13,7 +14,7 @@ import { tabs, type HomeProduct, type Tab } from "@/data/home";
  * horizontal carousel of 328px product cards 24px apart (Peak's card width: 3.7 visible at 1440px).
  * Scrolls natively (swipe on phones); dots underneath, the active one a short dash.
  */
-export function BestSellers({ products, now }: { products: Record<Tab, HomeProduct[]>; now: number }) {
+export function BestSellers({ products, now }: { products: Record<Tab, ShopProduct[]>; now: number }) {
   const [tab, setTab] = useState<Tab>("hair-care");
   const [page, setPage] = useState(0);
   const track = useRef<HTMLUListElement>(null);

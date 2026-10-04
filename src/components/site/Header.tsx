@@ -7,11 +7,12 @@ import { Icon } from "./Icon";
 import { Logo } from "./Logo";
 
 const links = [
-  { label: "Hair care", href: "/collections/hair-care" },
+  // Hair care has no single Shopify collection: /hair-care lists the hair collections. The rest are exact handles.
+  { label: "Hair care", href: "/hair-care" },
   { label: "Nails", href: "/collections/nails" },
   { label: "Barber", href: "/collections/barber" },
   { label: "Tools", href: "/collections/tools-accessories" },
-  { label: "Brands", href: "/#brands" },
+  { label: "Brands", href: "/brands" },
   { label: "Sale", href: "/collections/sales" },
 ];
 
