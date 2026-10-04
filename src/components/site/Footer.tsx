@@ -12,8 +12,7 @@ const SALE_MIN = 8;
  * Shop), a full-width newsletter row, then the bottom row with the copyright and the policy links. Rows are
  * separated by a 1px line in the header-field brown. Cream text; links are cream at 85% and turn peach on
  * hover. On phones the columns stack in two-column pairs, then the newsletter, then a centred bottom row.
- * All colours are header tokens from globals.css. "Our story" points at the featured block on the homepage
- * (#story) until a story page is written.
+ * All colours are header tokens from globals.css.
  */
 export async function Footer() {
   const saleCount = await countCollectionProducts("sales").catch(() => 0);
@@ -30,7 +29,7 @@ export async function Footer() {
     {
       title: "About",
       links: [
-        ["Our story", "/#story"],
+        ["Our story", "/our-story"],
         ["Brands we carry", "/brands"],
         ["Professionals", "/#pro"],
       ],

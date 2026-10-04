@@ -5,9 +5,9 @@ import { CollectionTile } from "./CollectionTile";
 import { SectionHeading } from "./SectionHeading";
 import { site } from "@/config/site";
 
-// Three real destinations (an "Our story" page does not exist yet; add a tile when it is written).
+// Three real destinations.
 const tiles = [
-  { label: "Hair care", href: "/hair-care", image: "/stills/silver-poster.jpg" },
+  { label: "Our story", href: "/our-story", image: "/stills/silver-poster.jpg" },
   { label: "Brands we carry", href: "/brands", image: "/stills/thermoliss-poster.jpg" },
   {
     label: "Contact",
@@ -37,7 +37,7 @@ export function Company() {
         </Reveal>
       </section>
 
-      <section id="story" className="pd-section container-pd scroll-mt-24">
+      <section className="pd-section container-pd">
         <Reveal effect="float" className="grid grid-cols-1 overflow-hidden rounded-[8px] lg:grid-cols-[2fr_1fr]">
           <div className="relative aspect-[123/95] bg-slate-ink">
             {/* The BaBylissPRO tools from the Diamond Pro hero slider (shop_images/hero-14-clean.jpg, 1920×1080 original),
