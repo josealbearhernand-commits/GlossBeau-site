@@ -4,9 +4,9 @@ import type { ShopProduct } from "@/lib/shopify";
 
 /**
  * THE product photo box, used by every card on the site (homepage carousel, collections, brands, search,
- * related products): a 4:5 box in the light grey `--box` colour, the photo centred with object-fit: contain
+ * related products): a square-cornered 4:5 box in pure white, the photo centred with object-fit: contain
  * inside the inner 80% (so tall bottles fill 80% of the height and wide brushes 80% of the width), and
- * mix-blend-mode: multiply so a white photo background disappears into the box.
+ * so photos sit on white with no blend and no ring around them.
  *
  * `product.photo` is resolved on the server (src/lib/shopify.ts): the pre-trimmed copy from
  * scripts/trim-images.mjs when it exists, otherwise the Shopify CDN URL at width=800. The photo is never
@@ -17,14 +17,14 @@ export function ProductImage({
   sizes,
   priority = false,
   className = "",
-  radius = "rounded-[4px]",
+  radius = "rounded-none",
   children,
 }: {
   product: Pick<ShopProduct, "title" | "photo">;
   sizes: string;
   priority?: boolean;
   className?: string;
-  /** Tailwind radius class for the box: 4px on the Peak-style tile, the 20px image radius inside the Shop card. */
+  /** Tailwind radius class for the box; square everywhere now. */
   radius?: string;
   /** Badges and other overlays, positioned against the box. */
   children?: React.ReactNode;

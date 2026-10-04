@@ -12,7 +12,7 @@
   --ink: #403a34;
   --ink-deep: #1c1917;
   --faint: #e9e2d9;
-  --muted: #58514a;    /* was #6b635b: darkened so small labels pass 4.5:1 on the rose cards (4.9:1) */
+  --muted: #58514a;    /* was #6b635b: darkened so small labels pass 4.5:1 everywhere (6.5:1 on cream, 5.9:1 on white) */
   --stone: #c9c1b7;
   --fog: #b8b0a6;
   /* Hairline for input borders and inactive indicators: 3:1 against every light surface (WCAG 1.4.11) */
@@ -25,7 +25,7 @@
   --button-hover: #f27e3d;
   --on-button: #2a2521;
   /* Rose: every product card and the product photo box; white photo backgrounds multiply into it */
-  --rose: #ddc9c0;
+  --rose: #ddc9c0;     /* only the "Sold out" badge now; cards and photo boxes are pure white */
   /* Dark header: brown bar with cream text and the cream logo; peach announcement strip */
   --header-bg: #2a2521;
   --header-text: #f2ebd0;
@@ -40,15 +40,15 @@
   --scrim: rgba(28, 25, 23, 0.6);
   --photo-shade: rgba(28, 25, 23, 0.28);
   /* Product image box: the light grey behind every product photo (photos multiply into it) */
-  --box: var(--rose);
+  --box: #ffffff;      /* product photo boxes: pure white, edge to edge, square */
 
   --shadow-sm: rgba(64, 58, 52, 0.07) 0px 2px 8px 0px;
   --shadow-card: rgba(64, 58, 52, 0.1) 0px 4px 6px -1px, rgba(64, 58, 52, 0.1) 0px 2px 4px -2px;
   --shadow-lg: rgba(64, 58, 52, 0.14) 0px 4px 24px 0px;
   --shadow-accent: rgba(255, 150, 91, 0.38) 0px 4px 24px 0px;
 
-  --radius-card: 28px;
-  --radius-image: 20px;
+  --radius-card: 0px;  /* product cards and photo boxes are square */
+  --radius-image: 0px;
   --radius-chip: 12px;
   --radius-pill: 9999px;
 
@@ -59,7 +59,7 @@
   /* shadcn variables mapped onto the brand tokens */
   --background: var(--canvas);
   --foreground: var(--ink);
-  --card: var(--rose);
+  --card: var(--surface);
   --card-foreground: var(--ink);
   --popover: var(--surface);
   --popover-foreground: var(--ink);
@@ -223,15 +223,17 @@ body {
   box-shadow: var(--shadow-sm);
 }
 .badge-sale { background: var(--accent); color: var(--on-accent); box-shadow: none; }
-.badge-soldout { background: var(--faint); color: var(--muted); box-shadow: none; }
+.badge-soldout { background: var(--rose); color: var(--ink); box-shadow: none; }
 
 .link { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--stone); transition: text-decoration-color .18s; }
 .link:hover { text-decoration-color: var(--ink); }
 
 /* Elevated card: white on the mist canvas, lifted by the dual shadow, never a border */
-.card { background: var(--rose); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+/* Product card: pure white, square, soft shadow; hover only deepens the shadow (no lines) */
+.card { background: var(--surface); border-radius: 0; box-shadow: var(--shadow-card); }
 /* Product photo frame: image radius 20px inside the 28px card, 8px white frame */
-.frame { position: relative; margin: 8px; border-radius: var(--radius-image); overflow: hidden; background: var(--rose); }
+/* Photo area inside the card: white, edge to edge, no ring */
+.frame { position: relative; margin: 0; border-radius: 0; overflow: hidden; background: var(--surface); }
 .frame img { object-fit: contain; }
 
 /* Gloss sweep — a soft white highlight slides across the photo on hover */
@@ -346,8 +348,8 @@ body {
 .pd-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 9999px; background: var(--ink); color: var(--on-dark); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
 
 /* Product image box: light grey, photos multiply into it so white backgrounds vanish */
-.product-box { background: var(--box); }
-.product-box img { mix-blend-mode: multiply; }
+/* Product photo box: white and square; photos sit on it directly (no blend needed on white) */
+.product-box { background: var(--box); border-radius: 0; }
 
 /* Photo tiles: dark gradient at the bottom, white uppercase label */
 .pd-tile-shade { background: linear-gradient(to top, color-mix(in srgb, var(--ink-deep) 62%, transparent) 0%, color-mix(in srgb, var(--ink-deep) 18%, transparent) 45%, transparent 70%); }

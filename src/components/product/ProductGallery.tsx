@@ -27,11 +27,11 @@ export function ProductGallery({ product }: { product: ShopProductDetail }) {
   return (
     <div className="contents">
       <div className="flex min-w-0 flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
-        <div className="card gloss relative aspect-square overflow-hidden">
+        <div className="card gloss relative aspect-square overflow-hidden bg-surface">
           {images[current] ? (
             <Image src={images[current].url} alt={images[current].alt} fill priority quality={90} sizes="(min-width: 1024px) 50vw, 100vw" className="object-contain p-8" />
           ) : (
-            <NoPhoto className="rounded-[var(--radius-card)]" />
+            <NoPhoto />
           )}
         </div>
         {images.length > 1 && (
@@ -43,7 +43,7 @@ export function ProductGallery({ product }: { product: ShopProductDetail }) {
                   onClick={() => setCurrent(i)}
                   aria-label={`Photo ${i + 1}`}
                   aria-pressed={i === current}
-                  className={`relative block size-16 overflow-hidden rounded-[12px] border bg-surface ${i === current ? "border-ink" : "border-faint"}`}
+                  className={`relative block size-16 overflow-hidden rounded-none border bg-surface ${i === current ? "border-ink" : "border-faint"}`}
                 >
                   <Image src={img.url} alt="" fill sizes="64px" className="object-contain p-1" />
                 </button>

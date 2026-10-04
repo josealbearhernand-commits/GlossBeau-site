@@ -16,14 +16,14 @@ export function ProductCard({ product, priority = false, as: Heading = "h2" }: {
       href={`/products/${product.handle}`}
       className="card group flex min-w-0 flex-col text-ink outline-offset-4 transition-shadow duration-300 hover:shadow-[var(--shadow-lg)]"
     >
-      {/* The shared 4:5 photo box (ProductImage) inside the card's 8px white frame, so products are the same size here as in the homepage carousel */}
+      {/* The shared 4:5 photo box (ProductImage), white and square, edge to edge in the card */}
       <div className="frame gloss">
         <ProductImage
           product={product}
           sizes="(min-width: 1200px) 280px, (min-width: 768px) 33vw, 50vw"
           priority={priority}
-          radius="rounded-[var(--radius-image)]"
-          className={sold ? "opacity-45" : ""}
+          radius="rounded-none"
+          className={sold ? "opacity-70" : ""}
         />
         {sold ? (
           <span className="badge badge-soldout absolute left-3 top-3">Sold out</span>

@@ -170,6 +170,10 @@ function toProduct(p: RawProduct): ShopProduct {
   };
 }
 
+/** Sold-out products go to the end of every list, keeping Shopify's order otherwise. */
+export const inStockFirst = <T extends { availableForSale: boolean }>(items: T[]): T[] =>
+  [...items.filter((p) => p.availableForSale), ...items.filter((p) => !p.availableForSale)];
+
 interface Connection<T> {
   nodes: T[];
   pageInfo: { hasNextPage: boolean; endCursor: string | null };
@@ -187,7 +191,7 @@ export async function searchProducts(query: string, first = 48, after: string | 
     } ${PRODUCT_FIELDS}`,
     { query, first, after },
   );
-  return { items: data.products.nodes.map(toProduct), endCursor: data.products.pageInfo.endCursor, hasNextPage: data.products.pageInfo.hasNextPage };
+  return { items: inStockFirst(data.products.nodes.map(toProduct)), endCursor: data.products.pageInfo.endCursor, hasNextPage: data.products.pageInfo.hasNextPage };
 }
 
 /** Every product's handle and vendor (a few 250-row requests), for brand counts and the brand index. */
@@ -289,7 +293,7 @@ export async function getCollectionProducts(handle: string, first = 48, after: s
   );
   const c = data.collection?.products;
   if (!c) return { items: [], endCursor: null, hasNextPage: false };
-  return { items: c.nodes.map(toProduct), endCursor: c.pageInfo.endCursor, hasNextPage: c.pageInfo.hasNextPage };
+  return { items: inStockFirst(c.nodes.map(toProduct)), endCursor: c.pageInfo.endCursor, hasNextPage: c.pageInfo.hasNextPage };
 }
 
 /** Number of products in a collection (handles only, 250 per request). */
