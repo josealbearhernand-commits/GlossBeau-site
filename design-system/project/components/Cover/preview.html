@@ -1,0 +1,53 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GlossBeau</title>
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--canvas); color:var(--ink); font-family:var(--font-sans); overflow:hidden; }
+  .cover { position:relative; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; width:480px; height:288px; }
+  .surface { fill:var(--surface); }
+  .accent { fill:var(--accent); }
+  .wash { fill:var(--accent-wash); }
+  .ink { fill:var(--ink); }
+  .card { rx:var(--radius-card); }
+  .words { position:absolute; left:var(--space-40); bottom:var(--space-40); max-width:440px; }
+  .name { margin:0; display:inline-flex; align-items:baseline; font-size:88px; line-height:.92; font-weight:600; letter-spacing:-0.055em; color:var(--ink); }
+  .name i { display:inline-block; margin-left:.08em; width:.22em; height:.22em; border-radius:9999px; background:var(--accent); }
+  .tag { margin:var(--space-12) 0 0 4px; font-size:14px; line-height:20px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      surface 200×232 card bled off the right (the floating white card is the identity) · ink 136×136 (the one dark tile) · accent 96×96 (the single accent) · accent-wash 64×64 (relief) — about 40% of 960×288
+  arrangement a staggered stack of cards, the way products float on the canvas; bottoms step up left to right; space-16 gutters
+  pattern     pills from "every inline control is a pill": six accent pills the height of the slide dots (8px) and one 32px active dot, placed like the hero's dot row
+  scales      sides in space-8 multiples; gutters space-16; corners radius-card (28) and radius-brand (20); pill rx 4 = half of 8
+-->
+<rect class="surface card" x="296" y="24" width="200" height="232" rx="28"/>
+<rect class="ink card" x="144" y="120" width="136" height="136" rx="20"/>
+<rect class="accent card" x="32" y="160" width="96" height="96" rx="20"/>
+<rect class="wash card" x="48" y="80" width="64" height="64" rx="20"/>
+<rect class="accent" x="320" y="232" width="32" height="8" rx="4"/>
+<rect class="wash" x="360" y="232" width="8" height="8" rx="4"/>
+<rect class="wash" x="376" y="232" width="8" height="8" rx="4"/>
+<rect class="wash" x="392" y="232" width="8" height="8" rx="4"/>
+<rect class="wash" x="408" y="232" width="8" height="8" rx="4"/>
+<rect class="wash" x="424" y="232" width="8" height="8" rx="4"/>
+<rect class="wash" x="440" y="232" width="8" height="8" rx="4"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">glossbeau<i></i></h1>
+<p class="tag">Professional hair care, nails, barber and tools. Open to everyone.</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!-- @dsCard group="Discovery" height=72 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>CategoryChip</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var G = window.GlossBeau, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'gb-row' }, h(G.CategoryChip, { color: '#d4784e', active: true }, 'Hair care'), h(G.CategoryChip, { color: '#e2566b' }, 'Nails'), h(G.CategoryChip, { color: '#1f6f5a' }, 'Barber'), h(G.CategoryChip, { color: '#332f2d' }, 'Tools')));
+</script>
+</body>
+</html>

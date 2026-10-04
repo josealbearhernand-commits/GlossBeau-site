@@ -1,0 +1,248 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* GlossBeau tokens — Shop style reference (DESIGN.md › "Shop — Floating shopping constellation") */
+:root {
+  /* Shop layout on GlossBeau's warm palette: linen canvas, walnut ink, one apricot-clay accent */
+  --canvas: #f6f1eb;
+  --surface: #ffffff;
+  --ink: #403a34;
+  --ink-deep: #1c1917;
+  --faint: #e9e2d9;
+  --muted: #6b635b;
+  --stone: #c9c1b7;
+  --fog: #b8b0a6;
+  --accent: #d4784e;
+  --accent-deep: #c0673f;
+  --accent-wash: #f6ddd0;
+  --slate-ink: #2a2521;
+  --ash: #665a54;
+  --on-accent: #1c1917;
+  --on-dark: #f6f1eb;
+  --scrim: rgba(28, 25, 23, 0.6);
+  --photo-shade: rgba(28, 25, 23, 0.28);
+
+  --shadow-sm: rgba(64, 58, 52, 0.07) 0px 2px 8px 0px;
+  --shadow-card: rgba(64, 58, 52, 0.1) 0px 4px 6px -1px, rgba(64, 58, 52, 0.1) 0px 2px 4px -2px;
+  --shadow-lg: rgba(64, 58, 52, 0.14) 0px 4px 24px 0px;
+  --shadow-accent: rgba(212, 120, 78, 0.38) 0px 4px 24px 0px;
+
+  --radius-card: 28px;
+  --radius-image: 20px;
+  --radius-chip: 12px;
+  --radius-pill: 9999px;
+
+  --gutter: 16px;
+  --page-max: 1200px;
+  --header-h: 64px;
+
+  /* shadcn variables mapped onto the brand tokens */
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--accent);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink);
+  --muted-foreground: var(--muted);
+  --accent-foreground: var(--ink);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: var(--faint);
+  --input: var(--faint);
+  --ring: var(--accent);
+  --radius: 0.625rem;
+}
+@media (min-width: 768px) {
+  :root { --gutter: 24px; }
+}
+@media (min-width: 1280px) {
+  :root { --gutter: 40px; }
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-faint: var(--faint);
+  --color-muted: var(--muted);
+  --color-stone: var(--stone);
+  --color-fog: var(--fog);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-wash: var(--accent-wash);
+  --color-slate-ink: var(--slate-ink);
+  --color-ash: var(--ash);
+  --color-ink-deep: var(--ink-deep);
+  --color-on-accent: var(--on-accent);
+  --color-on-dark: var(--on-dark);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: var(--radius-card);
+  --radius-image: var(--radius-image);
+  --radius-chip: var(--radius-chip);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-card: var(--shadow-card);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-accent: var(--shadow-accent);
+
+  --spacing-gutter: var(--gutter);
+
+  /* shadcn color names, so shadcn/tailwind.css and ui/ components resolve */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  letter-spacing: -0.031em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "ss01";
+}
+::selection { background: var(--accent-wash); color: var(--ink); }
+
+/* Type scale — hierarchy by size and tracking, never by bold (max 600) */
+.t-display-hero { font-weight: 600; letter-spacing: -0.06em; line-height: 0.92; font-size: clamp(56px, 11vw, 128px); }
+.t-display { font-weight: 600; letter-spacing: -0.055em; line-height: 0.95; font-size: clamp(44px, 8vw, 96px); }
+.t-heading-lg { font-weight: 600; letter-spacing: -0.05em; line-height: 1.02; font-size: clamp(32px, 4.5vw, 48px); }
+.t-heading { font-weight: 600; letter-spacing: -0.045em; line-height: 1.08; font-size: clamp(26px, 3.4vw, 34px); }
+.t-heading-sm { font-weight: 600; letter-spacing: -0.05em; line-height: 1.15; font-size: 20px; }
+.t-lead { font-weight: 400; letter-spacing: -0.031em; line-height: 1.38; font-size: 18px; }
+.t-body { font-weight: 400; letter-spacing: -0.031em; line-height: 1.5; font-size: 16px; }
+.t-body-sm { font-weight: 400; letter-spacing: -0.014em; line-height: 1.4; font-size: 14px; }
+.t-ui { font-weight: 500; letter-spacing: -0.031em; line-height: 1.2; font-size: 16px; }
+.t-ui-sm { font-weight: 600; letter-spacing: -0.014em; line-height: 1.2; font-size: 14px; }
+.t-caption { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 12px; }
+.t-eyebrow { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 12px; color: var(--muted); }
+.t-nav { font-weight: 500; letter-spacing: -0.014em; line-height: 1.2; font-size: 14px; }
+.t-label { font-weight: 500; letter-spacing: -0.017em; line-height: 1.33; font-size: 12px; }
+.t-micro { font-weight: 500; letter-spacing: -0.058em; line-height: 1.1; font-size: 9px; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* Layout */
+.page { max-width: var(--page-max); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* Controls — every control that sits inline with text is a 9999px pill */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; padding: 0 24px; border-radius: var(--radius-pill); border: 1px solid transparent;
+  font-weight: 500; font-size: 16px; letter-spacing: -0.031em; line-height: 1;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: var(--shadow-accent); }
+.btn-primary:hover { background: var(--accent-deep); }
+.btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--faint); box-shadow: var(--shadow-sm); }
+.btn-secondary:hover { box-shadow: var(--shadow-card); }
+.btn-light { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+.btn-light:hover { box-shadow: var(--shadow-card); }
+.btn-dark { background: var(--ink-deep); color: var(--on-dark); }
+.btn-dark:hover { background: var(--slate-ink); }
+.btn-sm { height: 36px; padding: 0 16px; font-size: 14px; font-weight: 600; letter-spacing: -0.014em; }
+.btn[disabled] { background: var(--stone); color: var(--surface); box-shadow: none; cursor: not-allowed; }
+.on-dark .btn:focus-visible { outline-color: var(--on-dark); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px 0 10px;
+  border: 1px solid var(--faint); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink);
+  box-shadow: var(--shadow-sm); font-weight: 400; font-size: 16px; letter-spacing: -0.031em; line-height: 1;
+  transition: box-shadow .18s, background-color .18s, color .18s; text-decoration: none; cursor: pointer;
+}
+.chip:hover { box-shadow: var(--shadow-card); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
+.chip-dot { width: 16px; height: 16px; border-radius: 9999px; flex: none; }
+
+.badge {
+  display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: var(--radius-pill);
+  font-weight: 600; font-size: 12px; letter-spacing: -0.017em; white-space: nowrap; background: var(--surface); color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+.badge-sale { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+.badge-soldout { background: var(--faint); color: var(--muted); box-shadow: none; }
+
+.link { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--stone); transition: text-decoration-color .18s; }
+.link:hover { text-decoration-color: var(--ink); }
+
+/* Elevated card: white on the mist canvas, lifted by the dual shadow, never a border */
+.card { background: var(--surface); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+/* Product photo frame: image radius 20px inside the 28px card, 8px white frame */
+.frame { position: relative; margin: 8px; border-radius: var(--radius-image); overflow: hidden; background: var(--surface); }
+.frame img { object-fit: contain; }
+
+/* Gloss sweep — a soft white highlight slides across the photo on hover */
+.gloss { overflow: hidden; }
+.gloss::after {
+  content: ""; position: absolute; top: -20%; bottom: -20%; left: -40%; width: 30%;
+  background: rgba(255,255,255,0.7); opacity: 0; transform: skewX(-18deg) translateX(0);
+  pointer-events: none;
+}
+.gloss:hover::after { animation: gloss-sweep .9s cubic-bezier(.22,.61,.36,1) forwards; }
+@keyframes gloss-sweep {
+  0% { opacity: 0; transform: skewX(-18deg) translateX(0); }
+  15% { opacity: .8; }
+  100% { opacity: 0; transform: skewX(-18deg) translateX(520%); }
+}
+
+/* Brand grid — the Diamond Pro brands wall: white tiles, hairline, warm light rising on hover */
+.brand-card { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 3 / 2; padding: 22px; background: var(--surface); border: 1px solid var(--faint); border-radius: 20px; overflow: hidden; text-decoration: none; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.brand-card::after { content: ""; position: absolute; left: -12%; right: -12%; bottom: 0; height: 78%; background: radial-gradient(ellipse 72% 88% at 50% 108%, rgba(212,120,78,.35) 0%, rgba(212,120,78,.14) 42%, transparent 74%); opacity: 0; transform: translateY(35%); transition: opacity .35s ease, transform .5s cubic-bezier(.22,.61,.36,1); pointer-events: none; }
+.brand-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
+.brand-card:hover::after { opacity: 1; transform: translateY(0); }
+.brand-card img { position: relative; z-index: 1; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; transition: transform .4s cubic-bezier(.22,.61,.36,1); }
+.brand-card:hover img { transform: translateY(-4px) scale(1.05); }
+.brand-card[hidden] { display: none; }
+
+/* Marquee */
+.marquee { display: flex; overflow: hidden; white-space: nowrap; }
+.marquee__track { display: flex; flex: none; will-change: transform; }
+
+/* Spotlight without motion: beats stack instead of crossfading */
+[data-static] .spot-beat { position: static; margin-bottom: 40px; }
+[data-static] .spot-beats { min-height: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .gloss:hover::after { animation: none; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.on-dark a:focus-visible, .on-dark button:focus-visible { outline-color: var(--on-dark); }
+
+@layer base {
+  * { border-color: var(--faint); }
+  body { background: var(--canvas); color: var(--ink); }
+  html { font-family: var(--font-sans); }
+}

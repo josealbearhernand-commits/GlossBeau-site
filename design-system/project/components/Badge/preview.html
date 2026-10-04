@@ -1,0 +1,12 @@
+<!-- @dsCard group="Status" height=64 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Badge</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var G = window.GlossBeau, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'gb-row' }, h(G.Badge, null, 'Best seller'), h(G.Badge, { tone: 'sale' }, 'Sale'), h(G.Badge, { tone: 'soldout' }, 'Sold out')));
+</script>
+</body>
+</html>

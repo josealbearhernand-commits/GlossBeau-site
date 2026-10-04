@@ -1,0 +1,12 @@
+<!-- @dsCard group="Actions" height=150 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Button</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var G = window.GlossBeau, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null, h('div', { className: 'gb-row' }, h(G.Button, { variant: 'primary', iconAfter: 'arrow' }, 'Shop tools'), h(G.Button, { variant: 'secondary' }, 'More brands (15)'), h(G.Button, { variant: 'primary', disabled: true }, 'Sold out')), h('div', { className: 'gb-row' }, h(G.Button, { variant: 'dark' }, 'Add to cart'), h(G.Button, { variant: 'light', size: 'sm' }, 'Quick add'))));
+</script>
+</body>
+</html>

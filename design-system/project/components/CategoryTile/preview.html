@@ -1,0 +1,12 @@
+<!-- @dsCard group="Discovery" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>CategoryTile</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var G = window.GlossBeau, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'gb-grid', style: { gridTemplateColumns: 'repeat(4, 1fr)' } }, ['Hair care','Nails','Barber','Tools'].map(function (n, i) { return h(G.CategoryTile, { key: n, name: n, count: [240,316,42,38][i] }); })));
+</script>
+</body>
+</html>

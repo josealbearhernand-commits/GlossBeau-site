@@ -1,0 +1,12 @@
+<!-- @dsCard group="Commerce" height=420 subtitle="Example products" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ProductCard</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var G = window.GlossBeau, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'gb-grid' }, h(G.ProductCard, { vendor: 'Example brand', title: 'Argan hydrating shampoo, 300 ml', price: 9.99, featured: true }), h(G.ProductCard, { vendor: 'Example brand', title: 'Ceramic flat iron, 1 inch', price: 89, compareAtPrice: 119 }), h(G.ProductCard, { vendor: 'Example brand', title: 'Cordless clipper', price: 289.99, soldOut: true })));
+</script>
+</body>
+</html>
