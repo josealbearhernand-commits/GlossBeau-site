@@ -6,6 +6,7 @@ import { ProductGallery } from "@/components/product/ProductGallery";
 import { Reveal } from "@/components/motion/Reveal";
 import { Icon } from "@/components/site/Icon";
 import { brandDisplayName, brandSlug } from "@/data/home";
+import { site } from "@/config/site";
 import { getProduct, searchProducts } from "@/lib/shopify";
 
 export const revalidate = 300;
@@ -53,7 +54,7 @@ export default async function ProductPage({ params }: { params: Params }) {
 
       <ul className="mt-10 divide-y divide-faint border-y border-faint lg:max-w-[52ch]">
         {[
-          ["truck", "Free US shipping over $75. Ships in 1–2 business days."],
+          ["truck", `Free US shipping over $${site.freeShippingThreshold}. Ships in 1–2 business days.`],
           ["shieldCheck", "Authentic stock from the brand's US distributor."],
         ].map(([icon, text]) => (
           <li key={text} className="t-body-sm flex items-center gap-4 py-4 text-ink">

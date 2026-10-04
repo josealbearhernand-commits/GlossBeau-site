@@ -14,6 +14,8 @@ export const site = {
   /** Public brand name, never a placeholder. */
   brand: "GlossBeau",
   domain: "glossbeau.com",
+  /** Free US standard shipping from this order subtotal (USD). The announcement bar, cart and product pages read it. */
+  freeShippingThreshold: 90,
 };
 
 /** Placeholder token → settings value, used when rendering content/policies.md. */
@@ -23,4 +25,7 @@ export const placeholders: Record<string, string> = {
   "[BUSINESS ADDRESS]": site.address,
 };
 
-export const unfilledPlaceholders = () => Object.entries(site).filter(([, v]) => /\[[A-Z][A-Z ]+\]/.test(v)).map(([k]) => k);
+export const unfilledPlaceholders = () =>
+  Object.entries(site)
+    .filter(([, v]) => typeof v === "string" && /\[[A-Z][A-Z ]+\]/.test(v))
+    .map(([k]) => k);

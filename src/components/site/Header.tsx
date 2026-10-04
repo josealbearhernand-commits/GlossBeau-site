@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Icon } from "./Icon";
 import { Logo } from "./Logo";
 import { site } from "@/config/site";
+import { useCart } from "@/components/cart/CartProvider";
 
 const links = [
   // Hair care has no single Shopify collection: /hair-care lists the hair collections. The rest are exact handles.
@@ -31,9 +32,6 @@ const searchTerms = [
   "acrylic powder",
 ];
 
-/** Items in the cart. There is no cart yet (ordering is by e-mail), so this stays 0 and the badge stays hidden. */
-const CART_COUNT = 0;
-
 /**
  * Dark header on Peak Design's measurements: a 40px peach announcement strip, then an 80px dark brown nav
  * row (64px on phones) with the cream logo, cream links (peach on hover, 2px peach underline on the current
@@ -51,6 +49,7 @@ export function Header() {
   const [focused, setFocused] = useState(false);
   const [panelTop, setPanelTop] = useState(104);
   const pathname = usePathname();
+  const { count, setOpen: openCart } = useCart();
   const navRow = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -136,7 +135,7 @@ export function Header() {
     <header className="on-header sticky top-[-40px] z-40 bg-header-bg text-header-text">
       {/* Announcement strip: 40px, peach, dark brown text */}
       <div className="flex h-10 items-center justify-center gap-6 whitespace-nowrap bg-announce-bg px-4 text-[0.875rem] uppercase tracking-[0.04em] text-announce-text lg:justify-between lg:px-10">
-        <span className="shrink-0">Free US shipping on orders over $75</span>
+        <span className="shrink-0">Free US shipping on orders over ${site.freeShippingThreshold}</span>
         <a href="#pro" className="hidden shrink-0 text-right hover:underline hover:underline-offset-4 lg:block">
           Pro pricing for licensed stylists
         </a>
@@ -188,21 +187,20 @@ export function Header() {
           <a href={`mailto:${site.supportEmail}`} className="hidden h-full items-center px-4 text-[1rem] text-header-text transition-colors hover:text-announce-bg xl:flex">
             Support
           </a>
-          {/* Cart: no checkout yet, so the bag explains how to order instead of pretending to hold items.
-              The peach count badge appears as soon as CART_COUNT is above 0. */}
-          <a
-            href={`mailto:${site.supportEmail}?subject=${encodeURIComponent("Order enquiry")}`}
-            aria-label={CART_COUNT > 0 ? `Cart, ${CART_COUNT} items` : "Cart: online checkout opens soon, e-mail us to order"}
-            title="Online checkout opens soon. E-mail us to order."
+          {/* Cart: opens the drawer; the peach badge shows the live item count */}
+          <button
+            type="button"
+            onClick={() => openCart(true)}
+            aria-label={count > 0 ? `Cart, ${count} ${count === 1 ? "item" : "items"}` : "Cart, empty"}
             className="relative grid h-full w-14 place-items-center text-header-text transition-colors hover:text-announce-bg"
           >
             <Icon name="bag" size={24} />
-            {CART_COUNT > 0 && (
+            {count > 0 && (
               <span className="tnum absolute right-2 top-1/2 grid min-w-[20px] -translate-y-[22px] place-items-center rounded-full bg-announce-bg px-1.5 text-[0.6875rem] font-semibold leading-[20px] text-announce-text">
-                {CART_COUNT}
+                {count}
               </span>
             )}
-          </a>
+          </button>
         </div>
       </div>
 

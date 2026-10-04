@@ -37,12 +37,16 @@ I'm not very technical. Explain each step in plain language and tell me before r
 - Routes: `/collections/[handle]` = exactly one Shopify collection; `/brands` = every vendor A–Z with counts;
   `/brands/[slug]` = products whose vendor matches (vendor:'…' query, slug from `brandSlug()`); `/hair-care` = hub
   of the hair collections because Shopify has no single hair-care collection; `/products/[handle]` = live photos,
-  options, variants (cart not wired yet). "Show more" paginates with Shopify cursors (?after=).
+  options, variants, Add to cart. "Show more" paginates with Shopify cursors (?after=).
 - Product photos: ONE component `src/components/product/ProductImage.tsx` draws every card's photo (homepage carousel,
   collections, brands, search, related): grey 4:5 box, photo centred in the inner 80%, multiply blend, never shown above 2×
   its own pixels. `scripts/trim-images.mjs` (prebuild, `npm run images`) trims EVERY product's featured photo from the
   Storefront API into `public/products/*.webp` (cap 800px) + `src/data/trimmed.json`; `resolvePhoto()` in shopify.ts picks
   the trimmed copy or the CDN URL at width=800. Cached by URL: a build only processes new photos (679 cached 2026-10-04).
+- Cart: Storefront Cart API (`src/lib/cart.ts`, server actions in `src/app/actions/cart.ts`, cookie `gb_cart` 30 days,
+  attribute source=glossbeau). `CartProvider` + `CartDrawer` in the layout; "Add to cart" in ProductForm; Checkout = cart.checkoutUrl
+  on Shopify Checkout (partner store Diamond Pro Salon Supply, named ONLY in the drawer note). Free shipping threshold is one
+  setting: `site.freeShippingThreshold` (90) → announcement bar, cart line, product page; policies text says $90 / $8 / $15.
 - Cache: every Storefront fetch is tagged "shopify"; `POST /api/revalidate` (secret REVALIDATE_SECRET in production, none in
   dev) drops it all. Run `curl -X POST http://localhost:3000/api/revalidate` after changing products or collections.
 - Jev (TypeSafe) helper for build scripts: `scripts/jev.mjs` (server-side only). Needs TYPESAFE_API_KEY in .env.local;
@@ -72,5 +76,4 @@ I'm not very technical. Explain each step in plain language and tell me before r
   colour decided after seeing the owner's resources) → Storefront token → Netlify + glossbeau.com (Namecheap).
 - Impeccable skill installed 2026-10-04 into `.claude/skills/impeccable` (project scope, `npx impeccable install`); run `/impeccable <command>`.
   Audit 2026-10-04: 11/20 → 16/20 after adapt/harden/clarify/typeset/optimize/animate/polish (reports in
-  `design-system/review/`). Interim ordering: "Order by e-mail" (mailto with the item filled in) until the Storefront cart
-  is wired; `/search?q=` is a real route; products without a photo show the NoPhoto frame; `--hairline` token for 3:1 lines.
+  `design-system/review/`). `/search?q=` is a real route; products without a photo show the NoPhoto frame; `--hairline` token for 3:1 lines.

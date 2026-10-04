@@ -21,9 +21,8 @@ export interface ProductPhoto {
 const manifest = trimmed as Record<string, { src: string; width: number; height: number }>;
 const CARD_WIDTH = 800;
 
-/** Shopify CDN URL with a width parameter (the CDN resizes on the fly, never above the source size). */
-export const cdnWidth = (url: string, width: number) =>
-  url.includes("cdn.shopify.com") ? `${url}${url.includes("?") ? "&" : "?"}width=${width}` : url;
+import { cdnWidth } from "@/lib/images";
+export { cdnWidth };
 
 /** The trimmed copy when the build step has one for this URL, otherwise the CDN image at card width. */
 export function resolvePhoto(image: { url: string; width: number; height: number } | null | undefined): ProductPhoto | undefined {
@@ -45,7 +44,7 @@ export class CatalogError extends Error {}
 
 export const storefrontReady = Boolean(domain && token);
 
-export async function storefront<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
+export async function storefront<T>(query: string, variables: Record<string, unknown> = {}, { cache = "catalog" }: { cache?: "catalog" | "none" } = {}): Promise<T> {
   if (!storefrontReady) {
     throw new CatalogError(
       "Shopify is not connected: add SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_ACCESS_TOKEN to .env.local and restart the dev server.",
@@ -57,8 +56,9 @@ export async function storefront<T>(query: string, variables: Record<string, unk
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Shopify-Storefront-Access-Token": token },
       body: JSON.stringify({ query, variables }),
-      // Every Shopify response is cached for 5 minutes and tagged, so POST /api/revalidate can purge them all at once.
-      next: { revalidate: REVALIDATE, tags: [SHOPIFY_TAG] },
+      // Catalog responses are cached for 5 minutes and tagged, so POST /api/revalidate can purge them all at once.
+      // Cart calls (cache: "none") are never cached: every read must see the latest lines.
+      ...(cache === "none" ? { cache: "no-store" as const } : { next: { revalidate: REVALIDATE, tags: [SHOPIFY_TAG] } }),
     });
   } catch (e) {
     throw new CatalogError(`Could not reach Shopify (${domain}): ${(e as Error).message}`);

@@ -60,7 +60,7 @@ export function ProductGallery({ product }: { product: ShopProductDetail }) {
           </p>
           <h1 className="t-heading text-ink">{product.title}</h1>
         </div>
-        <ProductForm title={product.title} options={product.options} variants={product.variants} onVariantChange={onVariant} />
+        <ProductForm options={product.options} variants={product.variants} onVariantChange={onVariant} />
         {product.descriptionHtml ? (
           <div className="prose-gb t-body max-w-[60ch] text-ink" dangerouslySetInnerHTML={{ __html: product.descriptionHtml }} />
         ) : (

@@ -21,17 +21,17 @@ Orders are packed and shipped within 1–3 business days. We do not ship on week
 
 ### Shipping options and delivery times
 
-| Method | Estimated delivery after shipping |
-|---|---|
-| Standard | 5–7 business days |
-| Expedited | 2–3 business days |
+| Method | Cost | Estimated delivery after shipping |
+|---|---|---|
+| Standard | $8, free on orders over $90 | 5–7 business days |
+| Expedited | $15 | 2–3 business days |
 
 Delivery times are estimates from the shipping carrier and are not guaranteed.
 
 ### Shipping costs
-- **Free standard shipping** on U.S. orders over $75 (after discounts, before taxes).
-- On orders under $75, shipping is calculated at checkout based on your address and the weight of your order.
-- Expedited shipping is always calculated at checkout.
+- **Free standard shipping** on U.S. orders over $90 (after discounts, before taxes).
+- On orders under $90, standard shipping is a flat $8.
+- Expedited shipping is a flat $15 on any order.
 
 ### Tracking your order
 When your order ships, you'll receive an email with a tracking number. If you haven't received it within 3 business days of placing your order, contact us at [SUPPORT EMAIL].
