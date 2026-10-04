@@ -1,0 +1,11 @@
+# Netlify build settings for the GlossBeau Next.js site.
+# Netlify's Next.js runtime is detected automatically; environment variables (SHOPIFY_STORE_DOMAIN,
+# SHOPIFY_STOREFRONT_ACCESS_TOKEN, REVALIDATE_SECRET) are set in the Netlify UI or with `netlify env:set`,
+# never committed. The prebuild step (placeholder check + photo trimming) runs inside `npm run build`.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # CONTEXT=production makes scripts/check-placeholders.mjs refuse to ship placeholders (Netlify sets it).
