@@ -511,14 +511,31 @@ export const brandLogos: { name: string; logo: string; href: string }[] = [
 
 export const brands = brandLogos.map((b) => b.name);
 
-/** Hero slideshow, in the owner's order. `video` is filled in as each Higgsfield clip is approved. */
-export const heroSlides: { handle: string; video?: string; poster?: string }[] = [
+/**
+ * Hero slideshow, in the owner's order. A product slide plays its approved Higgsfield clip
+ * (`video`, with `poster` as the still); an image slide is a plain photo with its own link.
+ * `focus` is the CSS object-position used when the slide is cropped to the hero's shape
+ * (1440×727 on desktop, 390×397 on phones); default is centre.
+ */
+export type HeroSlideData =
+  | { handle: string; video: string; poster: string; focus?: string }
+  | { image: string; alt: string; href: string; title: string; focus?: string };
+
+export const heroSlides: HeroSlideData[] = [
   { handle: "genus-argan-moisturizing-serum-for-dry-and-frizzy-hair-100ml", video: "/videos/serum-still1-seedance.mp4", poster: "/stills/serum-still-1-pump.jpg" },
   { handle: "inoar-argan-oil-thermoliss-thermoactivated-defrizzer-240ml", video: "/videos/thermoliss-A1.mp4", poster: "/stills/thermoliss-poster.jpg" },
   { handle: "genus-intense-restoring-shampoo-for-frizzy-and-damaged-hair", video: "/videos/intense-A2.mp4", poster: "/stills/intense-poster.jpg" },
   { handle: "inoar-agua-milagrosa-vegan-hair-treatment-spray-6-7-fl-oz", video: "/videos/agua-A2.mp4", poster: "/stills/agua-poster.jpg" },
   { handle: "inoar-glycolic-force-leave-in-hair-treatment-200ml", video: "/videos/glycolic-A1.mp4", poster: "/stills/glycolic-poster.jpg" },
   { handle: "nirvel-professional-silver-shampoo-moisturizing-250ml-for-gray-hair", video: "/videos/silver-A2.mp4", poster: "/stills/silver-poster.jpg" },
+  {
+    // New Adara Nails campaign photo (the Gloss Society Kit's cover photo in Shopify; full-size original from newadaranails.com)
+    image: "/images/new-adara-gloss-society.jpg",
+    alt: "A woman holding New Adara gel polish bottles in front of her face",
+    href: "/collections/new-adara",
+    title: "New Adara Nails",
+    focus: "50% 38%",
+  },
 ];
 
 export const byHandle = (handle: string) => products.find((p) => p.handle === handle);

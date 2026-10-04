@@ -1,24 +1,35 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { byCategory, categories, type Category } from "@/data/catalog";
+import { byCategory, categories, products, type Category } from "@/data/catalog";
+import { exploreCollections, featuredBrands, tabs } from "@/data/home";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 
+/** Shopify collection handles the homepage links to; until the Storefront API is live they show the preview catalog. */
+const known: Record<string, string> = Object.fromEntries([
+  ...exploreCollections.map((c) => [c.handle, c.title]),
+  ...featuredBrands.map((b) => [b.href.replace("/collections/", ""), b.name]),
+  ...tabs.map((t) => [t.href.replace("/collections/", ""), t.label]),
+  ["new-arrivals", "New Arrivals"],
+  ["sales", "Sale"],
+]);
+
 export function generateStaticParams() {
-  return categories.map((c) => ({ slug: c.slug }));
+  return [...categories.map((c) => ({ slug: c.slug })), ...Object.keys(known).map((slug) => ({ slug }))];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const c = categories.find((x) => x.slug === slug);
-  return { title: c?.name ?? "Collection" };
+  return { title: c?.name ?? known[slug] ?? "Collection" };
 }
 
 export default async function CollectionPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const cat = categories.find((c) => c.slug === slug);
-  if (!cat) notFound();
-  const items = byCategory(slug as Category);
+  const found = categories.find((c) => c.slug === slug);
+  if (!found && !known[slug]) notFound();
+  const cat = found ?? { slug, name: known[slug], tagline: "Live products arrive with the Storefront connection", count: products.length };
+  const items = found ? byCategory(slug as Category) : products;
 
   return (
     <div className="page pt-12 lg:pt-20">

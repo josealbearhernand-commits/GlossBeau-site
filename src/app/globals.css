@@ -24,6 +24,8 @@
   --on-dark: #f6f1eb;
   --scrim: rgba(28, 25, 23, 0.6);
   --photo-shade: rgba(28, 25, 23, 0.28);
+  /* Product image box: the light grey behind every product photo (photos multiply into it) */
+  --box: #efe9e1;
 
   --shadow-sm: rgba(64, 58, 52, 0.07) 0px 2px 8px 0px;
   --shadow-card: rgba(64, 58, 52, 0.1) 0px 4px 6px -1px, rgba(64, 58, 52, 0.1) 0px 2px 4px -2px;
@@ -84,6 +86,9 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-heading: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --color-box: var(--box);
 
   --radius-card: var(--radius-card);
   --radius-image: var(--radius-image);
@@ -224,17 +229,76 @@ body {
 .brand-card:hover img { transform: translateY(-4px) scale(1.05); }
 .brand-card[hidden] { display: none; }
 
-/* Marquee */
-.marquee { display: flex; overflow: hidden; white-space: nowrap; }
-.marquee__track { display: flex; flex: none; will-change: transform; }
+/* "More brands (X)" tile: same tile style, text instead of a logo */
+.brand-card-more { background: var(--canvas); }
+.brand-card-more:hover { background: var(--surface); }
 
-/* Spotlight without motion: beats stack instead of crossfading */
-[data-static] .spot-beat { position: static; margin-bottom: 40px; }
-[data-static] .spot-beats { min-height: 0; }
+/* ───────── Peak Design layout system (measured on peakdesign.com at 1440px and 390px) ───────── */
+/* Content gutter: 64px on desktop, 20px on phones; sections stack with the same padding top and bottom */
+.container-pd { width: 100%; max-width: 1440px; margin-inline: auto; padding-inline: 20px; }
+.pd-section { padding-block: 20px; }
+@media (min-width: 1024px) {
+  .container-pd { padding-inline: 64px; }
+  .pd-section { padding-block: 64px; }
+}
+
+/* Serif section heading: 40px / 44px / -0.4px (24px / 26.4px on phones) */
+.pd-heading { font-family: var(--font-serif); font-weight: 400; font-size: 24px; line-height: 1.1; letter-spacing: -0.01em; color: var(--ink); font-variation-settings: "opsz" 144, "SOFT" 30; }
+@media (min-width: 1024px) { .pd-heading { font-size: 40px; line-height: 44px; } }
+.font-serif { font-family: var(--font-serif); font-variation-settings: "opsz" 144, "SOFT" 30; }
+.font-mono { font-family: var(--font-mono); }
+
+/* Eyebrow: 16px uppercase, 0.6px tracking on Peak; 14px here so it reads as a label at our sizes */
+.pd-eyebrow { font-size: 14px; line-height: 1; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Buttons: 4px radius, uppercase. Small 40px (14px, 8px 16px), large 48px (16px, 12px 24px). */
+.pd-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 12px 24px; border-radius: 4px; border: 1px solid transparent; font-size: 16px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; white-space: nowrap; cursor: pointer; text-decoration: none; transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
+.pd-btn-sm { height: 40px; padding: 8px 16px; font-size: 14px; }
+.pd-btn-lg { height: 48px; padding: 12px 24px; font-size: 16px; }
+.pd-btn-dark { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
+.pd-btn-dark:hover { background: var(--ink-deep); border-color: var(--ink-deep); }
+.pd-btn-white { background: var(--surface); color: var(--ink); border-color: var(--surface); }
+.pd-btn-white:hover { background: var(--canvas); border-color: var(--canvas); }
+.pd-btn-outline { background: transparent; color: var(--on-dark); border-color: var(--on-dark); }
+.pd-btn-outline:hover { background: var(--on-dark); color: var(--ink); }
+
+/* Squared tabs: 40px tall, 8px 16px padding, 4px radius, 14px uppercase with 0.8px tracking */
+.pd-tab { display: inline-flex; align-items: center; height: 40px; padding: 8px 16px; border-radius: 4px; border: 1px solid var(--faint); background: var(--faint); color: var(--ink); font-size: 14px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; line-height: 1; cursor: pointer; transition: background-color .18s, color .18s, border-color .18s; }
+.pd-tab:hover { background: var(--stone); border-color: var(--stone); }
+.pd-tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-dark); }
+
+/* 48px circle arrow buttons (carousel prev / next) */
+.pd-circle { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--ink); color: var(--ink); background: transparent; cursor: pointer; transition: background-color .18s, color .18s; }
+.pd-circle:hover { background: var(--ink); color: var(--on-dark); }
+
+/* Inputs: 4px radius, 1px border */
+.pd-input { border: 1px solid var(--stone); border-radius: 4px; font-size: 16px; color: var(--ink); outline: none; transition: border-color .18s; min-width: 0; }
+.pd-input::placeholder { color: var(--muted); }
+.pd-input:focus { border-color: var(--ink); }
+
+/* NEW badge on product cards: dark pill, top-left */
+.pd-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 9999px; background: var(--ink); color: var(--on-dark); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
+
+/* Product image box: light grey, photos multiply into it so white backgrounds vanish */
+.product-box { background: var(--box); }
+.product-box img { mix-blend-mode: multiply; }
+
+/* Photo tiles: dark gradient at the bottom, white uppercase label */
+.pd-tile-shade { background: linear-gradient(to top, rgba(28, 25, 23, 0.62) 0%, rgba(28, 25, 23, 0.18) 45%, rgba(28, 25, 23, 0) 70%); }
+.pd-tile-label { color: #fff; font-size: 24px; line-height: 1.1; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+@media (min-width: 1024px) { .pd-tile-label { font-size: 32px; } }
+
+/* Best sellers carousel: Peak Design's fixed 328px cards 24px apart (3.7 visible at 1440px, the 4th cut off as a peek) */
+.carousel { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.carousel::-webkit-scrollbar { display: none; }
+.carousel-item { flex: 0 0 auto; width: 328px; min-width: 0; }
+@media (max-width: 639px) { .carousel-item { width: calc((100% - 24px) / 1.35); } }
+@media (min-width: 640px) and (max-width: 1023px) { .carousel-item { width: calc((100% - 24px * 2) / 2.5); } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .gloss:hover::after { animation: none; }
+  .carousel { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
 

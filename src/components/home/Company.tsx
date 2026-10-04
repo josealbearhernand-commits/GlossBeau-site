@@ -1,0 +1,67 @@
+import Image from "next/image";
+import Link from "next/link";
+import { Reveal } from "@/components/motion/Reveal";
+import { CollectionTile } from "./CollectionTile";
+import { SectionHeading } from "./SectionHeading";
+
+const tiles = [
+  { label: "Our story", href: "#", image: "/stills/silver-poster.jpg" },
+  { label: "Brands we carry", href: "/#brands", image: "/stills/thermoliss-poster.jpg" },
+  {
+    label: "Contact",
+    href: "#",
+    image: "https://cdn.shopify.com/s/files/1/0752/7546/8972/files/inoar-blends-collection-antioxidant-hair-care-range-vegan.jpg?v=1787784762",
+  },
+];
+
+/**
+ * Copy of Peak Design's "Radical company, radical products": heading, three 3:2 tiles 24px apart,
+ * then (its own 64px section) a featured split: 16:9 photo on the left (2/3) and a dark panel on
+ * the right (1/3) padded 64px with eyebrow, 40px serif headline, paragraph and a white outline button.
+ */
+export function Company() {
+  return (
+    <>
+      <section className="pd-section container-pd">
+        <div className="pb-6 lg:pb-8">
+          <SectionHeading>Salon-grade, open to everyone</SectionHeading>
+        </div>
+        <Reveal as="ul" stagger={0.08} effect="grow" className="grid gap-6 lg:grid-cols-3">
+          {tiles.map((t) => (
+            <li key={t.label}>
+              <CollectionTile href={t.href} label={t.label} image={t.image} ratio="landscape" />
+            </li>
+          ))}
+        </Reveal>
+      </section>
+
+      <section className="pd-section container-pd">
+        <Reveal effect="float" className="grid overflow-hidden rounded-[8px] lg:grid-cols-[2fr_1fr]">
+          <div className="relative aspect-[16/9] bg-faint">
+            {/* The BaBylissPRO tools photo from the Diamond Pro hero slider (shop_images/hero-14-clean.jpg, full 1920×1080 original) */}
+            <Image src="/images/babyliss-tools.jpg" alt="BaBylissPRO Nano Titanium flat irons and dryers" fill sizes="(min-width: 1024px) 66vw, 100vw" className="object-cover" />
+          </div>
+          <div className="on-dark flex items-center bg-slate-ink p-8 text-on-dark lg:p-16">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6">
+                <p className="pd-eyebrow">Featured</p>
+                <h2 className="font-serif text-[32px] leading-[35px] tracking-[-0.01em] lg:text-[40px] lg:leading-[44px]">
+                  The brands behind every great chair.
+                </h2>
+                <p className="text-[16px] leading-6">
+                  Placeholder copy. Inoar, Genus, Nirvel and more: professional lines chosen for real results, with the
+                  same prices stylists pay.
+                </p>
+              </div>
+              <div>
+                <Link href="/#brands" className="pd-btn pd-btn-lg pd-btn-outline">
+                  Meet the brands
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+    </>
+  );
+}

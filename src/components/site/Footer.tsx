@@ -1,18 +1,11 @@
 import Link from "next/link";
 import { Icon } from "./Icon";
+import { Logo } from "./Logo";
+import { EmailForm } from "./EmailForm";
 
 const cols = [
   {
-    title: "Shop",
-    links: [
-      ["Hair care", "/collections/hair-care"],
-      ["Nails", "/collections/nails"],
-      ["Barber", "/collections/barber"],
-      ["Tools", "/collections/tools"],
-    ],
-  },
-  {
-    title: "Help",
+    title: "Support",
     links: [
       ["Shipping and returns", "#"],
       ["Track an order", "#"],
@@ -21,56 +14,92 @@ const cols = [
     ],
   },
   {
-    title: "GlossBeau",
+    title: "About",
     links: [
       ["Our story", "#"],
       ["Brands we carry", "/#brands"],
-      ["Professionals", "#"],
+      ["Professionals", "/#pro"],
       ["Privacy", "#"],
+    ],
+  },
+  {
+    title: "Shop",
+    links: [
+      ["Hair care", "/collections/hair-care"],
+      ["Nails", "/collections/nails"],
+      ["Barber", "/collections/barber"],
+      ["Tools", "/collections/tools-accessories"],
+      ["Sale", "/collections/sales"],
     ],
   },
 ];
 
-/** The dark band at the bottom of the page. */
+/**
+ * Footer with peakdesign.com's structure and measurements (1440px): 64px padding, a
+ * 737px | 560px grid, three link columns 224px wide with 32px gaps, 24px uppercase headings,
+ * 14px links 32px apart, a newsletter form (input 40px + dark button), and a bottom row.
+ */
 export function Footer() {
   return (
-    <footer className="on-dark mt-24 bg-ink text-on-dark">
-      <div className="page grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div className="flex flex-col gap-5">
-          <p className="inline-flex items-baseline text-[28px] font-semibold tracking-[-0.055em]">
-            glossbeau
-            <span aria-hidden="true" className="ml-[2px] inline-block size-1.5 rounded-full bg-accent-wash" />
-          </p>
-          <p className="t-body-sm max-w-xs text-on-dark/70">
-            Salon-grade hair care, nails, barber and styling tools. The brands professionals trust, open to everyone.
-          </p>
-          <div className="flex gap-2">
-            <a href="#" aria-label="Instagram" className="grid size-12 place-items-center rounded-[20px] bg-slate-ink text-on-dark hover:bg-ash">
-              <Icon name="instagram" size={22} />
+    <footer className="bg-canvas text-ink">
+      <div className="container-pd grid gap-12 py-5 lg:grid-cols-[1fr_560px] lg:gap-16 lg:py-16">
+        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:mt-8 lg:grid-cols-[224px_224px_224px]">
+          {cols.map((c) => (
+            <div key={c.title}>
+              <h2 className="mb-6 text-[16px] font-semibold uppercase leading-none tracking-[0.02em] lg:text-[24px]">{c.title}</h2>
+              <ul className="grid gap-4">
+                {c.links.map(([label, href]) => (
+                  <li key={label} className="leading-4">
+                    <Link href={href} className="text-[14px] leading-[14px] text-ink underline-offset-4 hover:underline">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+
+        <div>
+          <h2 className="mb-4 text-[24px] font-semibold uppercase leading-[26px] tracking-[0.02em]">Subscribe to newsletter</h2>
+          <p className="mb-4 text-[16px] leading-[22px]">Be the first to know about new products, pro deals and restocks.</p>
+          <EmailForm
+            id="footer-email"
+            buttonLabel="Sign me up"
+            className="flex flex-col gap-4 sm:flex-row sm:items-center"
+            inputClassName="h-10 flex-1 bg-surface px-3"
+            buttonClassName="pd-btn-sm pd-btn-dark"
+          />
+        </div>
+      </div>
+
+      <div className="container-pd pb-5 lg:pb-16">
+        <div className="grid items-center gap-6 border-t border-faint pt-8 text-center lg:grid-cols-3 lg:text-left">
+          <ul className="order-3 flex justify-center gap-6 lg:order-1 lg:justify-start">
+            <li>
+              <Link href="#" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
+                Privacy
+              </Link>
+            </li>
+            <li>
+              <Link href="#" className="text-[14px] text-ink hover:underline hover:underline-offset-4">
+                Terms
+              </Link>
+            </li>
+          </ul>
+          <div className="order-1 flex flex-col items-center justify-center gap-4 lg:order-2 lg:flex-row lg:gap-10">
+            <Logo size={22} href="/" />
+            <p className="text-[16px] leading-5 text-muted">© 2026 GlossBeau.</p>
+          </div>
+          <div className="order-2 flex justify-center gap-4 lg:order-3 lg:justify-end">
+            <a href="#" aria-label="Instagram" className="grid size-10 place-items-center text-ink hover:text-muted">
+              <Icon name="instagram" size={24} />
             </a>
-            <a href="#" aria-label="TikTok" className="grid size-12 place-items-center rounded-[20px] bg-slate-ink text-on-dark hover:bg-ash">
-              <Icon name="tiktok" size={22} />
+            <a href="#" aria-label="TikTok" className="grid size-10 place-items-center text-ink hover:text-muted">
+              <Icon name="tiktok" size={24} />
             </a>
           </div>
         </div>
-        {cols.map((c) => (
-          <div key={c.title}>
-            <p className="t-ui-sm mb-5">{c.title}</p>
-            <ul className="flex flex-col gap-3">
-              {c.links.map(([label, href]) => (
-                <li key={label}>
-                  <Link href={href} className="t-body-sm text-on-dark/70 hover:text-on-dark">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <div className="page flex flex-wrap items-center justify-between gap-4 border-t border-on-dark/15 py-6">
-        <p className="t-caption text-on-dark/60">© 2026 GlossBeau. A Diamond Pro Salon Supply store.</p>
-        <p className="t-caption text-on-dark/60">glossbeau.com</p>
       </div>
     </footer>
   );

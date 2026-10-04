@@ -6,24 +6,32 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, reducedMotion } from "@/components/motion/gsap";
 import { Icon } from "@/components/site/Icon";
-import { Wordmark } from "@/components/site/Wordmark";
+import { Logo } from "@/components/site/Logo";
 import type { Product } from "@/data/catalog";
 
-export interface HeroSlide {
-  product: Product;
-  /** Optional Higgsfield clip (mp4). When present it plays once, then the show glides to the next slide. */
-  video?: string;
-  /** Approved still used as the poster and reduced-motion fallback. */
-  poster?: string;
-}
+export type HeroSlide =
+  | {
+      product: Product;
+      /** Higgsfield clip (mp4): plays once, then the show glides to the next slide. */
+      video: string;
+      /** Approved still used as the poster and reduced-motion fallback. */
+      poster: string;
+      focus?: string;
+    }
+  | { image: string; alt: string; href: string; title: string; focus?: string };
 
 const HOLD_MS = 5000;
 const GLIDE_S = 1.6;
 
+const key = (s: HeroSlide) => ("product" in s ? s.product.handle : s.image);
+const linkOf = (s: HeroSlide) => ("product" in s ? { href: `/products/${s.product.handle}`, title: s.product.title } : { href: s.href, title: s.title });
+
 /**
- * Hero slideshow: one product at a time in a large rounded card. A slide with a clip plays
- * the pour-and-splash, then the next slide glides in slowly; a photo-only slide holds 5 seconds.
- * Dots and arrows; pauses while hovered or when the tab is hidden.
+ * Hero slideshow, sized like Peak Design's hero (measured 2026-10-04): a square-edged block that
+ * runs edge to edge, 1440 × 727 on desktop and 390 × 397 on phones (Peak's phone hero is that photo
+ * plus a 360px text panel; ours has no text panel). One slide at a time: a product slide plays its
+ * pour clip, then the next slide glides in slowly; a photo slide holds 5 seconds. Arrows only; the
+ * show pauses while hovered or when the tab is hidden.
  */
 export function Hero({ slides }: { slides: HeroSlide[] }) {
   const ref = useRef<HTMLElement>(null);
@@ -46,7 +54,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
         return;
       }
       animating.current = true;
-      gsap.set(to, { autoAlpha: 1, xPercent: 12 * dir, scale: 0.96 });
+      gsap.set(to, { autoAlpha: 1, xPercent: 12 * dir, scale: 1.04 });
       gsap
         .timeline({
           defaults: { duration: GLIDE_S, ease: "power2.inOut" },
@@ -55,7 +63,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
             setIndex(target);
           },
         })
-        .to(from, { xPercent: -12 * dir, scale: 0.96, autoAlpha: 0 }, 0)
+        .to(from, { xPercent: -12 * dir, scale: 1.04, autoAlpha: 0 }, 0)
         .to(to, { xPercent: 0, scale: 1 }, 0);
     },
     [index, count],
@@ -65,7 +73,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
   useEffect(() => {
     if (timer.current) window.clearTimeout(timer.current);
     const slide = slides[index];
-    if (paused || slide.video) return;
+    if (paused || "video" in slide) return;
     timer.current = window.setTimeout(() => go(index + 1), HOLD_MS);
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
@@ -95,97 +103,88 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
   useGSAP(
     () => {
       if (reducedMotion()) return;
-      gsap.from(".hero-stage", { y: 40, opacity: 0, scale: 0.97, duration: 1.4, ease: "power4.out" });
+      gsap.from(".hero-stage", { opacity: 0, duration: 1.4, ease: "power4.out" });
       gsap.from(".hero-mark", { y: 16, opacity: 0, duration: 1, delay: 0.4, ease: "power3.out" });
     },
     { scope: ref },
   );
 
-  const current = slides[index].product;
+  const current = linkOf(slides[index]);
 
   return (
-    <section ref={ref} className="page flex flex-col items-center pb-4 pt-6 lg:pt-10">
+    <section ref={ref} className="flex flex-col items-center pb-4">
       <div
-        className="hero-stage card relative w-full max-w-[1120px] overflow-hidden"
+        className="hero-stage relative aspect-[390/397] w-full overflow-hidden bg-surface lg:aspect-[1440/727]"
         onPointerEnter={() => setPaused(true)}
         onPointerLeave={() => setPaused(false)}
         aria-roledescription="carousel"
         aria-label="Featured products"
       >
-        <div className="frame relative aspect-[4/3] sm:aspect-[16/10]">
-          {slides.map((s, i) => (
-            <div
-              key={s.product.handle}
-              data-slide={i}
-              className="absolute inset-0"
-              style={{ opacity: i === index ? 1 : 0, visibility: i === index ? "visible" : "hidden" }}
-              aria-hidden={i !== index}
-            >
-              {s.video ? (
+        {slides.map((s, i) => (
+          <div
+            key={key(s)}
+            data-slide={i}
+            className="absolute inset-0"
+            style={{ opacity: i === index ? 1 : 0, visibility: i === index ? "visible" : "hidden" }}
+            aria-hidden={i !== index}
+          >
+            {"video" in s ? (
+              <>
+                {/* Desktop: the 4:3 clip is taller than the 2:1 hero, so it shows whole (contain) and a blurred
+                    copy of its own still fills the sides. Phones (390×397) are nearly square, so the clip covers. */}
+                <Image src={s.poster} alt="" fill aria-hidden sizes="100vw" className="hidden scale-110 object-cover blur-2xl lg:block" />
                 <video
                   src={s.video}
-                  poster={s.poster ?? s.product.image}
+                  poster={s.poster}
                   muted
                   playsInline
                   preload={i === index ? "auto" : "metadata"}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 h-full w-full object-cover lg:object-contain"
+                  style={{ objectPosition: s.focus ?? "50% 50%" }}
                 />
-              ) : (
-                <Image
-                  src={s.product.image}
-                  alt={s.product.title}
-                  fill
-                  priority={i === 0}
-                  sizes="(min-width: 1200px) 1120px, 100vw"
-                  className="object-contain p-8 sm:p-14"
-                />
-              )}
-            </div>
-          ))}
-        </div>
+              </>
+            ) : (
+              <Image
+                src={s.image}
+                alt={s.alt}
+                fill
+                priority={i === 0}
+                sizes="100vw"
+                className="object-cover"
+                style={{ objectPosition: s.focus ?? "50% 50%" }}
+              />
+            )}
+          </div>
+        ))}
 
         <button
           type="button"
           onClick={() => go(index - 1, -1)}
-          aria-label="Previous product"
-          className="absolute left-4 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-surface text-ink shadow-[var(--shadow-lg)] transition-transform hover:scale-105"
+          aria-label="Previous slide"
+          className="absolute left-4 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-surface text-ink shadow-[var(--shadow-lg)] transition-transform hover:scale-105 lg:left-8"
         >
           <Icon name="caretDown" size={18} className="rotate-90" />
         </button>
         <button
           type="button"
           onClick={() => go(index + 1, 1)}
-          aria-label="Next product"
-          className="absolute right-4 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-surface text-ink shadow-[var(--shadow-lg)] transition-transform hover:scale-105"
+          aria-label="Next slide"
+          className="absolute right-4 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-surface text-ink shadow-[var(--shadow-lg)] transition-transform hover:scale-105 lg:right-8"
         >
           <Icon name="caretDown" size={18} className="-rotate-90" />
         </button>
 
         <Link
-          href={`/products/${current.handle}`}
-          className="absolute bottom-4 left-4 grid size-12 place-items-center rounded-full bg-accent text-on-accent shadow-[var(--shadow-accent)] transition-colors hover:bg-accent-deep"
+          href={current.href}
+          className="absolute bottom-4 left-4 grid size-12 place-items-center rounded-full bg-accent text-on-accent shadow-[var(--shadow-accent)] transition-colors hover:bg-accent-deep lg:bottom-8 lg:left-8"
           aria-label={`View ${current.title}`}
         >
           <Icon name="arrowUpRight" size={20} />
         </Link>
-
-        <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-2 rounded-full bg-surface/85 px-3 py-2 backdrop-blur-sm" role="tablist" aria-label="Slides">
-          {slides.map((s, i) => (
-            <button
-              key={s.product.handle}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`Slide ${i + 1}: ${s.product.title}`}
-              onClick={() => go(i, i > index ? 1 : -1)}
-              className={`h-2 rounded-full transition-all duration-500 ${i === index ? "w-8 bg-accent" : "w-2 bg-stone hover:bg-muted"}`}
-            />
-          ))}
-        </div>
       </div>
 
       <div className="hero-mark mt-8 flex flex-col items-center">
-        <Wordmark size={56} className="sm:[font-size:84px]" />
+        <Logo size={56} className="sm:[font-size:84px]" />
       </div>
     </section>
   );

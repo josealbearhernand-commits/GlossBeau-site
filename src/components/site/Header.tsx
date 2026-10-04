@@ -4,20 +4,42 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Icon } from "./Icon";
-import { Wordmark } from "./Wordmark";
+import { Logo } from "./Logo";
 
 const links = [
   { label: "Hair care", href: "/collections/hair-care" },
   { label: "Nails", href: "/collections/nails" },
   { label: "Barber", href: "/collections/barber" },
-  { label: "Tools", href: "/collections/tools" },
+  { label: "Tools", href: "/collections/tools-accessories" },
   { label: "Brands", href: "/#brands" },
+  { label: "Sale", href: "/collections/sales" },
 ];
 
+/** Real product types from the store; the search placeholder rotates through them. */
+const searchTerms = [
+  "keratin treatments",
+  "gel polish",
+  "clippers",
+  "argan oil serum",
+  "dip powder",
+  "round brushes",
+  "hair dryers",
+  "styling gel",
+  "leave-in conditioner",
+  "acrylic powder",
+];
+
+/**
+ * Peak Design header, measured at 1440px: a 40px announcement strip, then an 80px white nav row
+ * with a hairline underneath. Sticky with `top: -40px`, so the strip scrolls away and the nav
+ * row stays. At 390px the nav row is 64px: menu + search on the left, logo centred, account + cart.
+ */
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [term, setTerm] = useState(0);
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
   const pathname = usePathname();
-  const close = () => setOpen(false);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -26,68 +48,144 @@ export function Header() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => setTerm((t) => (t + 1) % searchTerms.length), 2600);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const showHint = !query && !focused;
+
+  const search = (
+    <form
+      role="search"
+      action="/search"
+      className="relative flex h-12 w-full items-center"
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
+      <label htmlFor="site-search" className="sr-only">
+        Search
+      </label>
+      <Icon name="search" size={16} className="pointer-events-none absolute left-[18px] text-ink" />
+      <input
+        id="site-search"
+        name="q"
+        type="search"
+        autoComplete="off"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        aria-label={`Search for ${searchTerms[term]}`}
+        className="h-12 w-full rounded-[4px] border border-stone bg-canvas pl-[38px] pr-3 text-[16px] text-ink outline-none transition-colors focus:border-ink focus:bg-surface"
+      />
+      {showHint && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-y-3 left-[38px] right-3 flex items-center gap-1 overflow-hidden text-[16px] leading-6 text-muted">
+          <span>Search for</span>
+          <span className="relative h-6 flex-1 overflow-hidden">
+            {searchTerms.map((t, i) => (
+              <span
+                key={t}
+                className="absolute inset-x-0 top-0 whitespace-nowrap transition-[transform,opacity] duration-500 ease-out"
+                style={{
+                  transform: `translateY(${i === term ? 0 : i === (term + searchTerms.length - 1) % searchTerms.length ? -24 : 24}px)`,
+                  opacity: i === term ? 1 : 0,
+                }}
+              >
+                {t}
+              </span>
+            ))}
+          </span>
+        </div>
+      )}
+    </form>
+  );
+
   return (
-    <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-md">
-      <div className="page flex h-16 items-center gap-6">
+    <header className="sticky top-[-40px] z-40 bg-surface">
+      {/* Announcement strip: 40px, like peakdesign.com's "Our mission / Find a store" strip */}
+      <div className="grid h-10 grid-cols-[1fr_auto_1fr] items-center bg-surface px-2 text-[14px] uppercase tracking-[0.04em] text-ink lg:px-10">
+        <span className="hidden lg:block">Free US shipping on orders over $75</span>
+        <span className="col-start-2 lg:hidden">Free US shipping over $75</span>
+        <a href="#pro" className="hidden text-right hover:underline hover:underline-offset-4 lg:block">
+          Pro pricing for licensed stylists
+        </a>
+      </div>
+
+      {/* Nav row: 80px desktop, 64px mobile */}
+      <div className="flex h-16 items-center border-b border-faint px-2 lg:h-20 lg:px-10">
         <button
           type="button"
-          className="-ml-2 grid size-12 place-items-center rounded-[20px] text-ink hover:bg-canvas lg:hidden"
+          className="grid size-14 place-items-center text-ink lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
           <Icon name={open ? "close" : "menu"} size={24} />
         </button>
+        <button type="button" className="grid size-14 place-items-center text-ink lg:hidden" aria-label="Search" onClick={() => setOpen(true)}>
+          <Icon name="search" size={22} />
+        </button>
 
-        <Link href="/" aria-label="GlossBeau home" className="rounded-full">
-          <Wordmark size={22} />
-        </Link>
+        <div className="flex flex-1 justify-center lg:flex-none lg:justify-start">
+          <Logo size={22} href="/" />
+        </div>
 
-        <nav className="hidden flex-1 items-center gap-1 lg:flex" aria-label="Main">
-          {links.map((l) => {
-            const current = pathname === l.href;
-            return (
-              <Link
-                key={l.href}
-                href={l.href}
-                aria-current={current ? "page" : undefined}
-                className={`t-nav rounded-full px-4 py-2 transition-colors ${
-                  current ? "bg-canvas text-ink" : "text-muted hover:bg-canvas hover:text-ink"
-                }`}
-              >
-                {l.label}
-              </Link>
-            );
-          })}
+        <nav className="ml-10 hidden h-full items-center lg:flex" aria-label="Main">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              aria-current={pathname === l.href ? "page" : undefined}
+              className="flex h-full items-center px-4 text-[16px] text-ink transition-colors hover:text-muted"
+            >
+              {l.label}
+            </Link>
+          ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-1">
-          <button type="button" className="grid size-12 place-items-center rounded-[20px] text-ink hover:bg-canvas" aria-label="Search">
-            <Icon name="search" size={24} />
-          </button>
-          <button type="button" className="hidden size-12 place-items-center rounded-[20px] text-ink hover:bg-canvas sm:grid" aria-label="Account">
+        <div className="mx-10 hidden w-[412px] shrink-0 lg:block xl:ml-auto">{search}</div>
+
+        <div className="flex h-full items-center lg:ml-auto xl:ml-0">
+          <Link href="#" className="hidden h-full items-center px-4 text-[16px] text-ink hover:text-muted lg:flex">
+            Support
+          </Link>
+          <Link href="#" aria-label="Account" className="grid h-full w-14 place-items-center text-ink hover:text-muted">
             <Icon name="user" size={24} />
-          </button>
-          <button type="button" className="relative grid size-12 place-items-center rounded-[20px] text-ink hover:bg-canvas" aria-label="Cart, 0 items">
+          </Link>
+          <button type="button" aria-label="Cart, 0 items" className="grid h-full w-14 place-items-center text-ink hover:text-muted">
             <Icon name="bag" size={24} />
           </button>
         </div>
       </div>
-      <div className="h-px bg-faint" />
 
       {open && (
-        <nav className="page bg-surface py-4 lg:hidden" aria-label="Main">
-          <ul className="flex flex-col">
-            {links.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href} onClick={close} className="flex h-14 items-center justify-between border-b border-faint text-[20px] font-semibold tracking-[-0.05em] text-ink">
-                  {l.label}
-                  <Icon name="arrowRight" />
+        <div className="fixed inset-x-0 bottom-0 top-[104px] z-40 overflow-y-auto bg-surface px-5 pb-10 pt-4 lg:hidden">
+          {search}
+          <nav aria-label="Main" className="mt-4">
+            <ul>
+              {links.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className="flex h-14 items-center justify-between border-b border-faint text-[18px] font-medium text-ink"
+                  >
+                    {l.label}
+                    <Icon name="arrowRight" size={20} />
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="#" onClick={() => setOpen(false)} className="flex h-14 items-center text-[16px] text-muted">
+                  Support
                 </Link>
               </li>
-            ))}
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        </div>
       )}
     </header>
   );

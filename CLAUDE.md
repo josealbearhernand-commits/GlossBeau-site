@@ -20,11 +20,31 @@ I'm not very technical. Explain each step in plain language and tell me before r
 
 ## Where things stand (updated 2026-10-04)
 - Site: Next.js 16 in this folder. Run `npm run dev` and open http://localhost:3000. `npm run build` passes.
+- Homepage below the brands grid is a copy of peakdesign.com's layout (measured at 1440/390px, numbers in
+  each component's comment): Peak-style header (40px strip + 80px nav, rotating search placeholder),
+  Best sellers tabs + carousel, Explore 3×3 tiles, What's new dark panel, company tiles + featured split,
+  pro-pricing panel, Peak-style footer. Serif headings = Fraunces, mono variant line = Geist Mono.
+- Logo: ONE component `src/components/site/Logo.tsx` (header, footer, under the hero). Swap the real logo there.
+- Homepage data: `src/data/home.ts` snapshot (vendors, 11 featured brands, best sellers per tab, 9 explore
+  collections). `src/lib/shopify.ts` `getHomeData()` switches to live Storefront data once the token exists.
+  "More brands (X)" is computed from the Shopify vendor list, never typed by hand.
+- Product photos: `npm run images` (also runs before build) trims white borders with sharp into
+  `public/products/` + `src/data/trimmed.json`; cards show them in a grey 4:5 box, 80% fill, multiply blend.
+- Scroll effects copied from newadaranails.com (Wix float/slide/grow/fade): `src/components/motion/Reveal.tsx`.
+- Review screenshots: `design-system/review/` (Peak vs GlossBeau compares; `2026-10-04-hero/` = every hero slide
+  at 1440 and 390 plus full pages). Shoot again with `tools/glossbeau-hero-shots.js <outDir>` (dev server running).
+- Playwright MCP cannot launch Chrome here; use `playwright-core` + the headless shell via Node instead
+  (scratch scripts `shots.js` / `section-shot.js`, see C:\Users\beaut\.claude\projects\C--shopify-dev\tools).
 - Look: Shop-style layout (28px soft cards, pills, Inter) on linen #f6f1eb, walnut #403a34 text, one accent
   Apricot clay #d4784e. Tokens in `src/app/globals.css`; the live design system is
   https://claude.ai/artifact/FmpZLez9iDpkmvWzpPKGxT and its source files are in `design-system/project/`.
-- Hero: slideshow of 6 products (owner's order) in `src/data/catalog.ts` `heroSlides`; each plays an approved
-  Higgsfield clip from `public/videos/` with a poster from `public/stills/`. Unused takes in `media-archive/`.
+- Hero: square-edged, edge to edge, sized like peakdesign.com's hero (1440×727 desktop, 390×397 phone; Peak's
+  phone hero is that photo + a 360px text panel). 7 slides in `src/data/catalog.ts` `heroSlides`: 6 product clips
+  (approved Higgsfield takes in `public/videos/`, posters in `public/stills/`) + the New Adara campaign portrait
+  (`public/images/new-adara-gloss-society.jpg`). On desktop the 4:3 clips show whole with a blurred copy of the
+  still filling the sides, so no bottle is cut. Arrows only, no dots. Unused takes in `media-archive/`.
+- Site photos saved locally in `public/images/`: BaBylissPRO tools (Diamond Pro hero-14), Gloss Society Kit
+  contents (What's new feature, pinned in `src/data/home.ts`, not replaced by live data).
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
 - Brand grid under the hero copies the Diamond Pro brands wall; logos come from Shopify shop_images.
 - Preview data: `src/data/catalog.ts` (real products). Live data: `src/lib/shopify.ts` once
