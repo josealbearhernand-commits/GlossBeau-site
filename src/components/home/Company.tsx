@@ -37,7 +37,7 @@ export function Company() {
         </Reveal>
       </section>
 
-      <section className="pd-section container-pd">
+      <section id="story" className="pd-section container-pd scroll-mt-24">
         <Reveal effect="float" className="grid grid-cols-1 overflow-hidden rounded-[8px] lg:grid-cols-[2fr_1fr]">
           <div className="relative aspect-[123/95] bg-slate-ink">
             {/* The BaBylissPRO tools from the Diamond Pro hero slider (shop_images/hero-14-clean.jpg, 1920×1080 original),

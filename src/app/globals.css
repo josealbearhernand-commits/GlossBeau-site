@@ -337,6 +337,10 @@ body {
 .pd-input { border: 1px solid var(--hairline); border-radius: 4px; font-size: 1rem; color: var(--ink); outline: none; transition: border-color .18s; min-width: 0; }
 .pd-input::placeholder { color: var(--muted); }
 .pd-input:focus { border-color: var(--ink); }
+/* Inputs on the dark header/footer: lighter brown field, cream text, cream placeholder at 70% (header tokens) */
+.on-header .pd-input { background: var(--header-field); border-color: var(--header-field-border); color: var(--header-text); }
+.on-header .pd-input::placeholder { color: color-mix(in srgb, var(--header-text) 70%, transparent); }
+.on-header .pd-input:focus { border-color: var(--header-text); }
 
 /* NEW badge on product cards: dark pill, top-left */
 .pd-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 9999px; background: var(--ink); color: var(--on-dark); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }

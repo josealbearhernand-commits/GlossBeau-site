@@ -2,100 +2,121 @@ import Link from "next/link";
 import { Logo } from "./Logo";
 import { EmailForm } from "./EmailForm";
 import { site } from "@/config/site";
+import { countCollectionProducts } from "@/lib/shopify";
 
-// Every link goes somewhere real. Pages that do not exist yet (Our story, FAQ, order tracking) are not
-// listed; add them here when they are written.
-const cols = [
-  {
-    title: "Support",
-    links: [
-      ["Shipping and returns", "/policies/refunds"],
-      ["Shipping policy", "/policies/shipping"],
-      ["Track an order", `mailto:${site.supportEmail}?subject=${encodeURIComponent("Where is my order?")}`],
-      ["Contact us", `mailto:${site.supportEmail}`],
-    ],
-  },
-  {
-    title: "About",
-    links: [
-      ["Brands we carry", "/brands"],
-      ["Professionals", "/#pro"],
-      ["Privacy", "/policies/privacy"],
-      ["Terms", "/policies/terms"],
-    ],
-  },
-  {
-    title: "Shop",
-    links: [
-      ["Hair care", "/hair-care"],
-      ["Nails", "/collections/nails"],
-      ["Barber", "/collections/barber"],
-      ["Tools", "/collections/tools-accessories"],
-      ["Sale", "/collections/sales"],
-    ],
-  },
-];
+/** The Sale link only shows once the sales collection has this many products. */
+const SALE_MIN = 8;
 
 /**
- * Footer with peakdesign.com's structure and measurements (1440px): 64px padding, a
- * 737px | 560px grid, three link columns 224px wide with 32px gaps, 24px uppercase headings,
- * 14px links 32px apart, a newsletter form (input 40px + dark button), and a bottom row.
+ * Dark footer (same brown as the header): four columns on one top line (logo + tagline, Support, About,
+ * Shop), a full-width newsletter row, then the bottom row with the copyright and the policy links. Rows are
+ * separated by a 1px line in the header-field brown. Cream text; links are cream at 85% and turn peach on
+ * hover. On phones the columns stack in two-column pairs, then the newsletter, then a centred bottom row.
+ * All colours are header tokens from globals.css. "Our story" points at the featured block on the homepage
+ * (#story) until a story page is written.
  */
-export function Footer() {
+export async function Footer() {
+  const saleCount = await countCollectionProducts("sales").catch(() => 0);
+
+  const cols: { title: string; links: [string, string][] }[] = [
+    {
+      title: "Support",
+      links: [
+        ["Shipping and returns", "/policies/refunds"],
+        ["Track an order", `mailto:${site.supportEmail}?subject=${encodeURIComponent("Where is my order?")}`],
+        ["Contact us", `mailto:${site.supportEmail}`],
+      ],
+    },
+    {
+      title: "About",
+      links: [
+        ["Our story", "/#story"],
+        ["Brands we carry", "/brands"],
+        ["Professionals", "/#pro"],
+      ],
+    },
+    {
+      title: "Shop",
+      links: [
+        ["Hair care", "/hair-care"],
+        ["Nails", "/collections/nails"],
+        ["Barber", "/collections/barber"],
+        ["Tools", "/collections/tools-accessories"],
+        ...(saleCount >= SALE_MIN ? ([["Sale", "/collections/sales"]] as [string, string][]) : []),
+      ],
+    },
+  ];
+
+  const link = "text-[0.875rem] leading-5 text-header-text/85 transition-colors hover:text-announce-bg max-lg:inline-block max-lg:py-2";
+
   return (
-    <footer className="bg-canvas text-ink">
-      <div className="container-pd grid gap-12 py-5 lg:grid-cols-[1fr_minmax(0,560px)] lg:gap-16 lg:py-16">
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:mt-8 lg:grid-cols-[repeat(3,minmax(0,224px))]">
+    <footer className="on-header bg-header-bg text-header-text">
+      {/* Top row: logo + tagline and the three link columns, all on the same top line */}
+      <div className="container-pd pt-10 lg:pt-16">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 pb-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-8 lg:pb-16">
+          <div className="col-span-2 lg:col-span-1">
+            <Logo tone="cream" height={36} href="/" />
+            <p className="mt-4 max-w-[34ch] text-[0.9375rem] leading-6 text-header-text/85">
+              Salon-grade hair care, nails and barber tools, open to everyone.
+            </p>
+          </div>
           {cols.map((c) => (
-            <div key={c.title}>
-              <h2 className="mb-6 text-[1rem] font-semibold uppercase leading-none tracking-[0.02em] lg:text-[1.5rem]">{c.title}</h2>
-              {/* On phones the rows sit 24px apart and each link carries 12px of vertical padding: a 41px
-                  tap area with no overlap, with the 14px/32px desktop rhythm untouched. */}
-              <ul className="grid gap-6 lg:gap-4">
+            <nav key={c.title} aria-label={c.title}>
+              <h2 className="mb-4 text-[0.8125rem] font-semibold uppercase leading-none tracking-[0.12em] text-header-text">{c.title}</h2>
+              <ul className="grid gap-3">
                 {c.links.map(([label, href]) => (
-                  <li key={label} className="leading-4">
-                    <Link href={href} className="text-[0.875rem] leading-[0.875rem] text-ink underline-offset-4 hover:underline max-lg:py-3">
+                  <li key={label}>
+                    <Link href={href} className={link}>
                       {label}
                     </Link>
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
-        </nav>
+        </div>
+      </div>
 
-        <div>
-          <h2 className="mb-4 text-[1.5rem] font-semibold uppercase leading-[1.625rem] tracking-[0.02em]">Subscribe to newsletter</h2>
-          <p className="mb-4 text-[1rem] leading-[1.375rem]">Be the first to know about new products, pro deals and restocks.</p>
+      {/* Newsletter row */}
+      <div className="border-t border-header-field">
+        <div className="container-pd grid gap-6 py-10 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-12">
+          <div>
+            <h2 className="text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-header-text">Subscribe to our newsletter</h2>
+            <p className="mt-2 text-[1rem] leading-6 text-header-text/85">Be the first to know about new products, pro deals and restocks.</p>
+          </div>
           <EmailForm
             id="footer-email"
             buttonLabel="Sign me up"
             subject="Newsletter sign-up"
-            className="flex flex-col gap-4 sm:flex-row sm:items-center"
-            inputClassName="h-10 w-full bg-surface px-3 sm:w-auto sm:flex-1"
-            buttonClassName="pd-btn-sm pd-btn-dark"
+            className="flex flex-col gap-3 sm:flex-row sm:items-center"
+            inputClassName="header-search h-12 w-full border-header-field-border bg-header-field px-4 text-header-text focus:border-header-text sm:w-auto sm:flex-1"
+            buttonClassName="pd-btn-dark h-12 px-6"
           />
         </div>
       </div>
 
-      <div className="container-pd pb-5 lg:pb-16">
-        <div className="grid items-center gap-6 border-t border-faint pt-8 text-center lg:grid-cols-2 lg:text-left">
-          <ul className="order-3 flex justify-center gap-6 lg:order-1 lg:justify-start">
-            <li>
-              <Link href="/policies/privacy" className="text-[0.875rem] text-ink hover:underline hover:underline-offset-4 max-lg:py-3">
-                Privacy
-              </Link>
-            </li>
-            <li>
-              <Link href="/policies/terms" className="text-[0.875rem] text-ink hover:underline hover:underline-offset-4 max-lg:py-3">
-                Terms
-              </Link>
-            </li>
+      {/* Bottom row */}
+      <div className="border-t border-header-field">
+        <div className="container-pd flex flex-col items-center gap-4 py-6 text-center lg:flex-row lg:justify-between lg:text-left">
+          <p className="text-[0.875rem] leading-5 text-header-text/85">
+            © {new Date().getFullYear()} {site.brand} · {site.legalName}
+          </p>
+          <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+            {(
+              [
+                ["Privacy", "/policies/privacy"],
+                ["Terms", "/policies/terms"],
+                ["Refunds", "/policies/refunds"],
+                ["Shipping", "/policies/shipping"],
+              ] as [string, string][]
+            ).map(([label, href]) => (
+              <li key={label}>
+                <Link href={href} className={link}>
+                  {label}
+                </Link>
+              </li>
+            ))}
           </ul>
-          <div className="order-1 flex flex-col items-center justify-center gap-4 lg:order-2 lg:flex-row lg:gap-10">
-            <Logo tone="dark" height={22} href="/" />
-            <p className="text-[1rem] leading-5 text-muted">© {new Date().getFullYear()} {site.brand} · {site.legalName}</p>
-          </div>
         </div>
       </div>
     </footer>
