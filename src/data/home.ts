@@ -75,6 +75,7 @@ export const hairCareCollections = [
   "hair-conditioners",
   "leave-in-conditioners",
   "professional-treatments",
+  "masks",
   "damaged-frizzy-hair",
   "hair-color",
   "developers-and-bleaching",
