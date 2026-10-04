@@ -1,35 +1,40 @@
+import Image from "next/image";
 import Link from "next/link";
 
 /**
- * THE one logo component. Today it renders the temporary "glossbeau." wordmark; when the real
- * logo is designed, swap the inside of this component (an <Image> or inline SVG) and every
- * place that shows the logo updates: header, footer, and the mark under the hero.
- *
- * `size` is the text size in px; `href` wraps it in a link (omit for a plain mark).
+ * THE one logo component: the GlossBeau wordmark from public/brand (SVG, 5219×1020).
+ * `tone="dark"` is the brown mark for light backgrounds (under the hero, footer, cards);
+ * `tone="cream"` is the cream mark for the dark brown header and panels.
+ * `height` is the rendered height in px (width follows the 5.12:1 ratio); `href` wraps it in a link.
  */
+const RATIO = 5219 / 1020;
+
 export function Logo({
-  size = 22,
+  tone = "dark",
+  height = 22,
   className = "",
   href,
   label = "GlossBeau home",
+  priority = false,
 }: {
-  size?: number;
+  tone?: "dark" | "cream";
+  height?: number;
   className?: string;
   href?: string;
   label?: string;
+  priority?: boolean;
 }) {
+  const width = Math.round(height * RATIO);
   const mark = (
-    <span
-      className={`inline-flex items-baseline whitespace-nowrap font-semibold tracking-[-0.055em] text-ink ${className}`}
-      style={{ fontSize: size, lineHeight: 1 }}
-    >
-      glossbeau
-      <span
-        aria-hidden="true"
-        className="ml-[0.08em] inline-block rounded-full bg-accent"
-        style={{ width: size * 0.22, height: size * 0.22 }}
-      />
-    </span>
+    <Image
+      src={`/brand/glossbeau-logo-${tone}.svg`}
+      alt="GlossBeau"
+      width={width}
+      height={height}
+      priority={priority}
+      className={`block h-auto w-auto ${className}`}
+      style={{ height, width }}
+    />
   );
   if (!href) return mark;
   return (

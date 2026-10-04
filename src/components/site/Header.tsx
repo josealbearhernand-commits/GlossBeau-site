@@ -31,14 +31,18 @@ const searchTerms = [
   "acrylic powder",
 ];
 
+/** Items in the cart. There is no cart yet (ordering is by e-mail), so this stays 0 and the badge stays hidden. */
+const CART_COUNT = 0;
+
 /**
- * Peak Design header, measured at 1440px: a 40px announcement strip, then an 80px white nav row
- * with a hairline underneath. Sticky with `top: -40px`, so the strip scrolls away and the nav
- * row stays. At 390px the nav row is 64px: menu + search on the left, logo centred, cart.
+ * Dark header on Peak Design's measurements: a 40px peach announcement strip, then an 80px dark brown nav
+ * row (64px on phones) with the cream logo, cream links (peach on hover, 2px peach underline on the current
+ * page), the search field on a slightly lighter brown, and the cart with a peach count badge. Sticky with
+ * `top: -40px`, so the strip scrolls away and the nav row stays. All colours are header tokens in globals.css.
  *
- * The search form is a plain GET to /search (works without JavaScript). The phone menu is a panel
- * fixed under the nav row: it closes on Escape and on navigation, moves focus into its search field
- * when it opens and back to the menu button when it closes. No account link until customer accounts exist.
+ * The search form is a plain GET to /search (works without JavaScript). The phone menu is a dark panel fixed
+ * under the nav row: it closes on Escape and on navigation, moves focus into its search field when it opens
+ * and back to the menu button when it closes.
  */
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -91,7 +95,7 @@ export function Header() {
       <label htmlFor={id} className="sr-only">
         Search products
       </label>
-      <Icon name="search" size={16} className="pointer-events-none absolute left-[18px] text-ink" />
+      <Icon name="search" size={16} className="pointer-events-none absolute left-[18px] text-header-text" />
       <input
         id={id}
         name="q"
@@ -102,10 +106,10 @@ export function Header() {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         aria-label={`Search products, for example ${searchTerms[term]}`}
-        className="h-12 w-full rounded-[4px] border border-stone bg-canvas pl-[38px] pr-3 text-[1rem] text-ink outline-none transition-colors focus:border-ink focus:bg-surface"
+        className="header-search h-12 w-full rounded-[4px] border border-header-field-border bg-header-field pl-[38px] pr-3 text-[1rem] text-header-text outline-none transition-colors focus:border-header-text"
       />
       {showHint && (
-        <div aria-hidden="true" className="pointer-events-none absolute inset-y-3 left-[38px] right-3 flex items-center gap-1 overflow-hidden text-[1rem] leading-6 text-muted">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-y-3 left-[38px] right-3 flex items-center gap-1 overflow-hidden text-[1rem] leading-6 text-header-text opacity-70">
           <span>Search for</span>
           <span className="relative h-6 flex-1 overflow-hidden">
             {searchTerms.map((t, i) => (
@@ -126,10 +130,12 @@ export function Header() {
     </form>
   );
 
+  const iconButton = "grid size-14 place-items-center text-header-text transition-colors hover:text-announce-bg";
+
   return (
-    <header className="sticky top-[-40px] z-40 bg-surface">
-      {/* Announcement strip: 40px, like peakdesign.com's "Our mission / Find a store" strip */}
-      <div className="flex h-10 items-center justify-center gap-6 whitespace-nowrap bg-surface px-4 text-[0.875rem] uppercase tracking-[0.04em] text-ink lg:justify-between lg:px-10">
+    <header className="on-header sticky top-[-40px] z-40 bg-header-bg text-header-text">
+      {/* Announcement strip: 40px, peach, dark brown text */}
+      <div className="flex h-10 items-center justify-center gap-6 whitespace-nowrap bg-announce-bg px-4 text-[0.875rem] uppercase tracking-[0.04em] text-announce-text lg:justify-between lg:px-10">
         <span className="shrink-0">Free US shipping on orders over $75</span>
         <a href="#pro" className="hidden shrink-0 text-right hover:underline hover:underline-offset-4 lg:block">
           Pro pricing for licensed stylists
@@ -138,11 +144,11 @@ export function Header() {
 
       {/* Nav row: 80px desktop, 64px mobile. Between 1024 and 1280 the row is tight: 24px side padding, 12px link
           padding and no Support text link, so the links never wrap and the search keeps a usable width. */}
-      <div ref={navRow} className="flex h-16 items-center border-b border-faint px-2 lg:h-20 lg:px-6 xl:px-10">
+      <div ref={navRow} className="flex h-16 items-center border-b border-header-field-border px-2 lg:h-20 lg:px-6 xl:px-10">
         <button
           ref={toggle}
           type="button"
-          className="grid size-14 place-items-center text-ink lg:hidden"
+          className={`${iconButton} lg:hidden`}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls={open ? "phone-menu" : undefined}
@@ -150,41 +156,52 @@ export function Header() {
         >
           <Icon name={open ? "close" : "menu"} size={24} />
         </button>
-        <button type="button" className="grid size-14 place-items-center text-ink lg:hidden" aria-label="Search" onClick={() => setOpen(true)}>
+        <button type="button" className={`${iconButton} lg:hidden`} aria-label="Search" onClick={() => setOpen(true)}>
           <Icon name="search" size={22} />
         </button>
 
         <div className="flex flex-1 justify-center lg:flex-none lg:justify-start">
-          <Logo size={22} href="/" />
+          <Logo tone="cream" height={24} href="/" priority />
         </div>
 
         <nav className="ml-6 hidden h-full items-center lg:flex xl:ml-10" aria-label="Main">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              aria-current={pathname === l.href ? "page" : undefined}
-              className="flex h-full items-center whitespace-nowrap px-3 text-[1rem] text-ink transition-colors hover:text-muted xl:px-4"
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            const current = pathname === l.href;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={current ? "page" : undefined}
+                className={`relative flex h-full items-center whitespace-nowrap px-3 text-[1rem] text-header-text transition-colors hover:text-announce-bg xl:px-4 ${
+                  current ? "after:absolute after:inset-x-3 after:bottom-0 after:h-[2px] after:bg-announce-bg xl:after:inset-x-4" : ""
+                }`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="mx-4 hidden w-full min-w-0 max-w-[412px] shrink lg:block xl:mx-10 xl:ml-auto">{search("site-search")}</div>
 
         <div className="flex h-full items-center lg:ml-auto xl:ml-0">
-          <a href={`mailto:${site.supportEmail}`} className="hidden h-full items-center px-4 text-[1rem] text-ink hover:text-muted xl:flex">
+          <a href={`mailto:${site.supportEmail}`} className="hidden h-full items-center px-4 text-[1rem] text-header-text transition-colors hover:text-announce-bg xl:flex">
             Support
           </a>
-          {/* Cart: no checkout yet, so the bag explains how to order instead of pretending to hold items */}
+          {/* Cart: no checkout yet, so the bag explains how to order instead of pretending to hold items.
+              The peach count badge appears as soon as CART_COUNT is above 0. */}
           <a
             href={`mailto:${site.supportEmail}?subject=${encodeURIComponent("Order enquiry")}`}
-            aria-label="Cart: online checkout opens soon, e-mail us to order"
+            aria-label={CART_COUNT > 0 ? `Cart, ${CART_COUNT} items` : "Cart: online checkout opens soon, e-mail us to order"}
             title="Online checkout opens soon. E-mail us to order."
-            className="grid h-full w-14 place-items-center text-ink hover:text-muted"
+            className="relative grid h-full w-14 place-items-center text-header-text transition-colors hover:text-announce-bg"
           >
             <Icon name="bag" size={24} />
+            {CART_COUNT > 0 && (
+              <span className="tnum absolute right-2 top-1/2 grid min-w-[20px] -translate-y-[22px] place-items-center rounded-full bg-announce-bg px-1.5 text-[0.6875rem] font-semibold leading-[20px] text-announce-text">
+                {CART_COUNT}
+              </span>
+            )}
           </a>
         </div>
       </div>
@@ -194,7 +211,7 @@ export function Header() {
           id="phone-menu"
           ref={panel}
           style={{ top: panelTop }}
-          className="fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-surface px-5 pb-10 pt-4 lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-header-bg px-5 pb-10 pt-4 text-header-text lg:hidden"
         >
           {search("phone-search")}
           <nav aria-label="Main" className="mt-4">
@@ -204,7 +221,8 @@ export function Header() {
                   <Link
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="flex h-14 items-center justify-between border-b border-faint text-[1.125rem] font-medium text-ink"
+                    aria-current={pathname === l.href ? "page" : undefined}
+                    className={`flex h-14 items-center justify-between border-b border-header-field-border text-[1.125rem] font-medium ${pathname === l.href ? "text-announce-bg" : "text-header-text"}`}
                   >
                     {l.label}
                     <Icon name="arrowRight" size={20} />
@@ -212,7 +230,7 @@ export function Header() {
                 </li>
               ))}
               <li>
-                <a href={`mailto:${site.supportEmail}`} className="flex h-14 items-center text-[1rem] text-muted">
+                <a href={`mailto:${site.supportEmail}`} className="flex h-14 items-center text-[1rem] text-header-text opacity-80">
                   Support: {site.supportEmail}
                 </a>
               </li>

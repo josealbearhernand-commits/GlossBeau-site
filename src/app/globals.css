@@ -26,6 +26,13 @@
   --on-button: #2a2521;
   /* Rose: every product card and the product photo box; white photo backgrounds multiply into it */
   --rose: #ddc9c0;
+  /* Dark header: brown bar with cream text and the cream logo; peach announcement strip */
+  --header-bg: #2a2521;
+  --header-text: #f2ebd0;
+  --header-field: #3a332e;
+  --header-field-border: #4a423c;
+  --announce-bg: #ff965b;
+  --announce-text: #2a2521;
   --slate-ink: #2a2521;
   --ash: #665a54;
   --on-accent: #1c1917;
@@ -84,6 +91,12 @@
   --color-stone: var(--stone);
   --color-fog: var(--fog);
   --color-rose: var(--rose);
+  --color-header-bg: var(--header-bg);
+  --color-header-text: var(--header-text);
+  --color-header-field: var(--header-field);
+  --color-header-field-border: var(--header-field-border);
+  --color-announce-bg: var(--announce-bg);
+  --color-announce-text: var(--announce-text);
   --color-button: var(--button);
   --color-button-hover: var(--button-hover);
   --color-on-button: var(--on-button);
@@ -365,6 +378,9 @@ body {
 }
 
 a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.on-header a:focus-visible, .on-header button:focus-visible, .on-header input:focus-visible { outline-color: var(--announce-bg); }
+/* Search field in the dark header: placeholder is cream at 70% (blended ≈ #bfb8a0, 8.6:1 on the field) */
+.header-search::placeholder { color: color-mix(in srgb, var(--header-text) 70%, transparent); }
 .on-dark a:focus-visible, .on-dark button:focus-visible { outline-color: var(--on-dark); }
 
 @layer base {

@@ -93,7 +93,7 @@ export function Footer() {
             </li>
           </ul>
           <div className="order-1 flex flex-col items-center justify-center gap-4 lg:order-2 lg:flex-row lg:gap-10">
-            <Logo size={22} href="/" />
+            <Logo tone="dark" height={22} href="/" />
             <p className="text-[1rem] leading-5 text-muted">© {new Date().getFullYear()} {site.brand} · {site.legalName}</p>
           </div>
         </div>

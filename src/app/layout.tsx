@@ -30,9 +30,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://glossbeau.com"),
   title: { default: "GlossBeau", template: "%s · GlossBeau" },
   description:
     "Salon-grade hair care, nails, barber and styling tools, for everyone. Curated professional brands with real results.",
+  openGraph: {
+    title: "GlossBeau",
+    description:
+      "Salon-grade hair care, nails, barber and styling tools, for everyone. Curated professional brands with real results.",
+    url: "https://glossbeau.com",
+    siteName: "GlossBeau",
+    images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "GlossBeau" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GlossBeau",
+    description:
+      "Salon-grade hair care, nails, barber and styling tools, for everyone. Curated professional brands with real results.",
+    images: ["/brand/og-image.png"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

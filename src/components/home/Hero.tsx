@@ -216,7 +216,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
 
       {/* The page's h1: the big wordmark, with the store's one-line description for screen readers and search engines */}
       <h1 className="hero-mark mt-8 flex flex-col items-center">
-        <Logo size={56} className="sm:[font-size:84px]" />
+        <Logo tone="dark" height={72} />
         <span className="sr-only">: salon-grade hair care, nails, barber supplies and styling tools, open to everyone</span>
       </h1>
     </section>

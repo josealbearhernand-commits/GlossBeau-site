@@ -29,7 +29,7 @@ I'm not very technical. Explain each step in plain language and tell me before r
   Company name, support e-mail and address live ONLY in `src/config/site.ts` (used by policies, header Support
   link, footer). No phone number anywhere, no social icons. `scripts/check-placeholders.mjs` runs before every
   build: warns locally, fails a Netlify production build if any [BRACKET] placeholder is left.
-- Logo: ONE component `src/components/site/Logo.tsx` (header, footer, under the hero). Swap the real logo there.
+- Logo: ONE component `src/components/site/Logo.tsx` renders the real wordmark from `public/brand/` (dark SVG on light areas, cream SVG in the dark header); icons in `src/app/icon.png`, `apple-icon.png`, `manifest.ts`; OG image `public/brand/og-image.png`. Header is dark brown with a peach strip (tokens `--header-*`, `--announce-*` in globals.css).
 - Catalog: LIVE from the Shopify Storefront API only (`src/lib/shopify.ts`); there is no sample catalog. Needs
   `.env.local` with SHOPIFY_STORE_DOMAIN + SHOPIFY_STOREFRONT_ACCESS_TOKEN (see `.env.example`). Without it (or on
   any Shopify error) pages show the `CatalogError` message, never products. `src/data/home.ts` is config only

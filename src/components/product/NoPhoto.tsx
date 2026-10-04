@@ -11,7 +11,7 @@ export function NoPhoto({ className = "" }: { className?: string }) {
       aria-label="No photo yet"
       className={`product-box flex h-full w-full flex-col items-center justify-center gap-2 ${className}`}
     >
-      <Logo size={18} className="opacity-40" />
+      <Logo tone="dark" height={14} className="opacity-40" />
       <span className="t-caption text-muted">Photo coming soon</span>
     </div>
   );
