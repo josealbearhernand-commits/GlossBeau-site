@@ -7,12 +7,12 @@
 /* GlossBeau tokens — Shop style reference (DESIGN.md › "Shop — Floating shopping constellation") */
 :root {
   /* Shop layout on GlossBeau's warm palette: linen canvas, walnut ink, one apricot-clay accent */
-  --canvas: #f6f1eb;
+  --canvas: #f2ebd0;   /* cream page background, every page */
   --surface: #ffffff;
   --ink: #403a34;
   --ink-deep: #1c1917;
   --faint: #e9e2d9;
-  --muted: #6b635b;
+  --muted: #58514a;    /* was #6b635b: darkened so small labels pass 4.5:1 on the rose cards (4.9:1) */
   --stone: #c9c1b7;
   --fog: #b8b0a6;
   /* Hairline for input borders and inactive indicators: 3:1 against every light surface (WCAG 1.4.11) */
@@ -20,19 +20,25 @@
   --accent: #d4784e;
   --accent-deep: #c0673f;
   --accent-wash: #f6ddd0;
+  /* Buttons: peach with dark brown text (white text failed readability); outline buttons use the same peach border */
+  --button: #ff965b;
+  --button-hover: #f27e3d;
+  --on-button: #2a2521;
+  /* Rose: every product card and the product photo box; white photo backgrounds multiply into it */
+  --rose: #ddc9c0;
   --slate-ink: #2a2521;
   --ash: #665a54;
   --on-accent: #1c1917;
-  --on-dark: #f6f1eb;
+  --on-dark: #f2ebd0;
   --scrim: rgba(28, 25, 23, 0.6);
   --photo-shade: rgba(28, 25, 23, 0.28);
   /* Product image box: the light grey behind every product photo (photos multiply into it) */
-  --box: #efe9e1;
+  --box: var(--rose);
 
   --shadow-sm: rgba(64, 58, 52, 0.07) 0px 2px 8px 0px;
   --shadow-card: rgba(64, 58, 52, 0.1) 0px 4px 6px -1px, rgba(64, 58, 52, 0.1) 0px 2px 4px -2px;
   --shadow-lg: rgba(64, 58, 52, 0.14) 0px 4px 24px 0px;
-  --shadow-accent: rgba(212, 120, 78, 0.38) 0px 4px 24px 0px;
+  --shadow-accent: rgba(255, 150, 91, 0.38) 0px 4px 24px 0px;
 
   --radius-card: 28px;
   --radius-image: 20px;
@@ -46,12 +52,12 @@
   /* shadcn variables mapped onto the brand tokens */
   --background: var(--canvas);
   --foreground: var(--ink);
-  --card: var(--surface);
+  --card: var(--rose);
   --card-foreground: var(--ink);
   --popover: var(--surface);
   --popover-foreground: var(--ink);
-  --primary: var(--accent);
-  --primary-foreground: var(--on-accent);
+  --primary: var(--button);
+  --primary-foreground: var(--on-button);
   --secondary: var(--surface);
   --secondary-foreground: var(--ink);
   --muted-foreground: var(--muted);
@@ -77,6 +83,10 @@
   --color-muted: var(--muted);
   --color-stone: var(--stone);
   --color-fog: var(--fog);
+  --color-rose: var(--rose);
+  --color-button: var(--button);
+  --color-button-hover: var(--button-hover);
+  --color-on-button: var(--on-button);
   --color-hairline: var(--hairline);
   --color-accent: var(--accent);
   --color-accent-deep: var(--accent-deep);
@@ -170,8 +180,8 @@ body {
   transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: var(--shadow-accent); }
-.btn-primary:hover { background: var(--accent-deep); }
+.btn-primary { background: var(--button); color: var(--on-button); box-shadow: var(--shadow-accent); }
+.btn-primary:hover { background: var(--button-hover); }
 .btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--faint); box-shadow: var(--shadow-sm); }
 .btn-secondary:hover { box-shadow: var(--shadow-card); }
 .btn-light { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
@@ -206,9 +216,9 @@ body {
 .link:hover { text-decoration-color: var(--ink); }
 
 /* Elevated card: white on the mist canvas, lifted by the dual shadow, never a border */
-.card { background: var(--surface); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.card { background: var(--rose); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
 /* Product photo frame: image radius 20px inside the 28px card, 8px white frame */
-.frame { position: relative; margin: 8px; border-radius: var(--radius-image); overflow: hidden; background: var(--surface); }
+.frame { position: relative; margin: 8px; border-radius: var(--radius-image); overflow: hidden; background: var(--rose); }
 .frame img { object-fit: contain; }
 
 /* Gloss sweep — a soft white highlight slides across the photo on hover */
@@ -293,12 +303,13 @@ body {
 .pd-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 12px 24px; border-radius: 4px; border: 1px solid transparent; font-size: 1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; white-space: nowrap; cursor: pointer; text-decoration: none; transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
 .pd-btn-sm { height: 40px; padding: 8px 16px; font-size: 0.875rem; }
 .pd-btn-lg { height: 48px; padding: 12px 24px; font-size: 1rem; }
-.pd-btn-dark { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
-.pd-btn-dark:hover { background: var(--ink-deep); border-color: var(--ink-deep); }
-.pd-btn-white { background: var(--surface); color: var(--ink); border-color: var(--surface); }
-.pd-btn-white:hover { background: var(--canvas); border-color: var(--canvas); }
-.pd-btn-outline { background: transparent; color: var(--on-dark); border-color: var(--on-dark); }
-.pd-btn-outline:hover { background: var(--on-dark); color: var(--ink); }
+.pd-btn-dark { background: var(--button); color: var(--on-button); border-color: var(--button); }
+.pd-btn-dark:hover { background: var(--button-hover); border-color: var(--button-hover); }
+.pd-btn-white { background: var(--button); color: var(--on-button); border-color: var(--button); }
+.pd-btn-white:hover { background: var(--button-hover); border-color: var(--button-hover); }
+/* Outline button sits on the dark brown panels: peach border, light text (dark brown text would vanish there); fills peach on hover */
+.pd-btn-outline { background: transparent; color: var(--on-dark); border-color: var(--button); }
+.pd-btn-outline:hover { background: var(--button); border-color: var(--button); color: var(--on-button); }
 
 /* Squared tabs: 40px tall, 8px 16px padding, 4px radius, 14px uppercase with 0.8px tracking */
 .pd-tab { display: inline-flex; align-items: center; height: 40px; padding: 8px 16px; border-radius: 4px; border: 1px solid var(--faint); background: var(--faint); color: var(--ink); font-size: 0.875rem; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; line-height: 1; cursor: pointer; transition: background-color .18s, color .18s, border-color .18s; }
