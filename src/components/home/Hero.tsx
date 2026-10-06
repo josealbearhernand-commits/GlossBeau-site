@@ -17,7 +17,7 @@ export type HeroSlide =
       poster: string;
       focus?: string;
     }
-  | { image: string; alt: string; href: string; title: string; focus?: string };
+  | { image: string; alt: string; href: string; title: string; focus?: string; ratio?: number };
 
 const HOLD_MS = 5000;
 const GLIDE_S = 1.6;
@@ -167,21 +167,27 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
                   muted
                   playsInline
                   preload={i === index ? "auto" : "metadata"}
-                  className="absolute inset-0 h-full w-full object-cover lg:object-contain"
-                  style={{ objectPosition: s.focus ?? "50% 50%" }}
+                  className="hero-media-soft absolute inset-0 h-full w-full object-cover lg:object-contain"
+                  style={{ objectPosition: s.focus ?? "50% 50%", "--ar": 1112 / 834 } as React.CSSProperties}
                 />
               </>
             ) : (
-              <Image
-                src={s.image}
-                alt={s.alt}
-                fill
-                priority={i === 0}
-                quality={90}
-                sizes="100vw"
-                className="object-cover"
-                style={{ objectPosition: s.focus ?? "50% 50%" }}
-              />
+              <>
+                {/* Desktop: same treatment as the clips. The photo is far squarer than the 1440×600 hero, so covering
+                    magnified it ~1.7× and cut her face and the bottles; it now shows whole (contain, centred) with a
+                    blurred copy of itself filling the sides. Phones keep cover, framed by `focus`. */}
+                <Image src={s.image} alt="" fill aria-hidden sizes="100vw" quality={50} className="hidden object-cover blur-2xl lg:block" />
+                <Image
+                  src={s.image}
+                  alt={s.alt}
+                  fill
+                  priority={i === 0}
+                  quality={90}
+                  sizes="(min-width: 1024px) 70vw, 100vw"
+                  className={`object-cover [object-position:var(--focus)] lg:object-contain lg:[object-position:50%_50%] ${s.ratio ? "hero-media-soft" : ""}`}
+                  style={{ "--focus": s.focus ?? "50% 50%", "--ar": s.ratio } as React.CSSProperties}
+                />
+              </>
             )}
           </div>
         ))}

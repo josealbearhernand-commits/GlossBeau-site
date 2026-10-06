@@ -21,7 +21,7 @@
   --canvas-mid: color-mix(in srgb, color-mix(in srgb, var(--canvas) 60%, var(--surface)) 90%, var(--peach)); /* cream to white midpoint, hint of peach */
   --surface-warm: color-mix(in srgb, var(--surface) 82%, var(--canvas));    /* bottom of a best-seller card's text panel */
   --fade-len: 96px;    /* every cream <-> light transition: 96px on phones, 180px from 1024px */
-  --hero-fade: 88px;   /* how far the hero photo melts into the page */
+  --hero-fade: 64px;   /* how far the hero photo melts into the page: 64px on phones, 96px from 1024px */
   --surface: #ffffff;
   --ink: #403a34;
   --ink-deep: #1c1917;
@@ -95,7 +95,7 @@
   :root { --gutter: 24px; }
 }
 @media (min-width: 1024px) {
-  :root { --fade-len: 180px; --hero-fade: 128px; }
+  :root { --fade-len: 180px; --hero-fade: 96px; }
 }
 @media (min-width: 1280px) {
   :root { --gutter: 40px; }
@@ -385,7 +385,18 @@ body {
 /* ───────── Background layers (2026-10-05): every section uses the same tokens ───────── */
 /* Hero bottom edge: the photo fades into the peach-tinted cream under it, so there is no hard line */
 .hero-fade { position: absolute; inset-inline: 0; bottom: 0; height: var(--hero-fade); pointer-events: none;
-  background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--canvas-soft) 45%, transparent) 45%, color-mix(in srgb, var(--canvas-soft) 85%, transparent) 75%, var(--canvas-soft) 100%); }
+  /* Eased so the photo stays crisp: barely any haze until the last third, then it melts into the page */
+  background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--canvas-soft) 8%, transparent) 40%, color-mix(in srgb, var(--canvas-soft) 35%, transparent) 65%, color-mix(in srgb, var(--canvas-soft) 80%, transparent) 88%, var(--canvas-soft) 100%); }
+/* Desktop hero media shown whole (contain) beside its blurred copy: feather the left and right edges so the photo
+   melts into the blur instead of ending on a straight line. --ar = media width / height, set per slide; the media
+   is as tall as the stage (min(600px, 70svh)), so its drawn width is that height × --ar. */
+@media (min-width: 1024px) {
+  .hero-media-soft {
+    --soft-edge: calc(50% - min(600px, 70svh) * var(--ar) / 2);
+    -webkit-mask-image: linear-gradient(to right, transparent var(--soft-edge), #000 calc(var(--soft-edge) + 72px), #000 calc(100% - var(--soft-edge) - 72px), transparent calc(100% - var(--soft-edge)));
+    mask-image: linear-gradient(to right, transparent var(--soft-edge), #000 calc(var(--soft-edge) + 72px), #000 calc(100% - var(--soft-edge) - 72px), transparent calc(100% - var(--soft-edge)));
+  }
+}
 /* Under the hero: peach-tinted cream with a soft bloom behind the big logo */
 .bg-hero-tail { background: var(--canvas-soft); isolation: isolate; }
 /* Bloom behind the big logo: it fades to nothing before the hero's bottom edge, so no line shows where they meet */

@@ -71,7 +71,9 @@ I'm not very technical. Explain each step in plain language and tell me before r
   `public/videos/`, 1600×1200 posters in `public/stills/`) + the New Adara campaign portrait
   (`public/images/new-adara-gloss-society-wide.jpg`, a 3302×2300 full-resolution crop of the 3302×5331 original;
   its hands are soft in the photo itself). On desktop the 4:3 clips show whole with a blurred copy of the still
-  filling the sides, so no bottle is cut. Arrows only: no dots, no link button, no scale/zoom on the slides.
+  filling the sides, so no bottle is cut. Since 2026-10-05 the New Adara photo does the same on desktop
+  (it was magnified ~1.7× by cover), media edges are feathered into the blur (`.hero-media-soft`, `--ar` per slide), and
+  the bottom fade (`.hero-fade`, 64/96px) is eased so photos stay crisp. Arrows only: no dots, no link button, no scale/zoom on the slides.
 - Site photos saved locally in `public/images/`: BaBylissPRO tools (Diamond Pro hero-14, cropped to the tools), Gloss Society Kit
   contents (What's new feature, pinned in `src/data/home.ts`, not replaced by live data).
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
@@ -83,6 +85,13 @@ I'm not very technical. Explain each step in plain language and tell me before r
   `netlify api createSiteBuild --data '{"site_id":"3d661db8-9c7f-4143-8720-85ccbdf7f024"}'` or a local
   `git config user.email diamondprosalon@gmail.com`. The repo is public. Site visibility was set to Public in the Netlify UI.
   Local `netlify deploy --build` fails on Windows (plugin static publish); always build on Netlify.
+- Contact (2026-10-05): `/contact` posts to `/__forms.html` (Netlify Forms needs the static copy in `public/__forms.html`,
+  same field names). Form detection was turned ON for the site via API (processing_settings.ignore_html_forms=false);
+  an email notification hook sends each message to service@glossbeau.com; field `email` = Reply-To. Headless-browser
+  test posts get a 200 but are silently dropped as bots; test from a real browser. Two TEST submissions exist from setup.
+- Newsletter: `/api/newsletter` + `src/lib/shopify-admin.ts` (Dev Dashboard app, client credentials, write/read_customers,
+  tag glossbeau-newsletter). Needs SHOPIFY_ADMIN_CLIENT_ID / SHOPIFY_ADMIN_CLIENT_SECRET locally and in Netlify; the
+  footer box switches to it with `kind="newsletter"` on its EmailForm (still mailto until the keys are tested).
 - Impeccable skill installed 2026-10-04 into `.claude/skills/impeccable` (project scope, `npx impeccable install`); run `/impeccable <command>`.
   Audit 2026-10-04: 11/20 → 16/20 after adapt/harden/clarify/typeset/optimize/animate/polish (reports in
   `design-system/review/`). `/search?q=` is a real route; products without a photo show the NoPhoto frame; `--hairline` token for 3:1 lines.
