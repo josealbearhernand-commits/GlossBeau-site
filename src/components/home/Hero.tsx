@@ -17,7 +17,7 @@ export type HeroSlide =
       poster: string;
       focus?: string;
     }
-  | { image: string; alt: string; href: string; title: string; focus?: string; ratio?: number };
+  | { image: string; alt: string; href: string; title: string; focus?: string; ratio?: number; soft?: [number, number] };
 
 const HOLD_MS = 5000;
 const GLIDE_S = 1.6;
@@ -185,7 +185,13 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
                   quality={90}
                   sizes="(min-width: 1024px) 70vw, 100vw"
                   className={`object-cover [object-position:var(--focus)] lg:object-contain lg:[object-position:50%_50%] ${s.ratio ? "hero-media-soft" : ""}`}
-                  style={{ "--focus": s.focus ?? "50% 50%", "--ar": s.ratio } as React.CSSProperties}
+                  style={
+                    {
+                      "--focus": s.focus ?? "50% 50%",
+                      "--ar": s.ratio,
+                      ...(s.soft ? { "--soft-l": `${s.soft[0]}px`, "--soft-r": `${s.soft[1]}px` } : {}),
+                    } as React.CSSProperties
+                  }
                 />
               </>
             )}

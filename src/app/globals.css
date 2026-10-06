@@ -392,9 +392,11 @@ body {
    is as tall as the stage (min(600px, 70svh)), so its drawn width is that height × --ar. */
 @media (min-width: 1024px) {
   .hero-media-soft {
+    /* --soft-l / --soft-r: feather width per side (72px default). A slide whose subject touches an edge (the New Adara
+       bottle labels on the right) sets that side small so nothing important is washed out. */
     --soft-edge: calc(50% - min(600px, 70svh) * var(--ar) / 2);
-    -webkit-mask-image: linear-gradient(to right, transparent var(--soft-edge), #000 calc(var(--soft-edge) + 72px), #000 calc(100% - var(--soft-edge) - 72px), transparent calc(100% - var(--soft-edge)));
-    mask-image: linear-gradient(to right, transparent var(--soft-edge), #000 calc(var(--soft-edge) + 72px), #000 calc(100% - var(--soft-edge) - 72px), transparent calc(100% - var(--soft-edge)));
+    -webkit-mask-image: linear-gradient(to right, transparent var(--soft-edge), #000 calc(var(--soft-edge) + var(--soft-l, 72px)), #000 calc(100% - var(--soft-edge) - var(--soft-r, 72px)), transparent calc(100% - var(--soft-edge)));
+    mask-image: linear-gradient(to right, transparent var(--soft-edge), #000 calc(var(--soft-edge) + var(--soft-l, 72px)), #000 calc(100% - var(--soft-edge) - var(--soft-r, 72px)), transparent calc(100% - var(--soft-edge)));
   }
 }
 /* Under the hero: peach-tinted cream with a soft bloom behind the big logo */

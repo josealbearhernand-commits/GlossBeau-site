@@ -4,11 +4,12 @@
  * `focus` is the CSS object-position used when the slide is cropped to the hero's shape
  * (600px tall on desktop, 420px on phones, full width); default is centre.
  * `ratio` (width / height) of an image slide lets desktop feather the photo's left and right edges into the blurred
- * sides; clips are all 1112×834.
+ * sides; clips are all 1112×834. `soft` = [left, right] feather in px (default 72 each): keep it small on a side
+ * where the subject touches the edge.
  */
 export type HeroSlideData =
   | { handle: string; title: string; video: string; poster: string; focus?: string }
-  | { image: string; alt: string; href: string; title: string; focus?: string; ratio?: number };
+  | { image: string; alt: string; href: string; title: string; focus?: string; ratio?: number; soft?: [number, number] };
 
 export const heroSlides: HeroSlideData[] = [
   { handle: "genus-argan-moisturizing-serum-for-dry-and-frizzy-hair-100ml", title: "Genus Argan Moisturizing Serum", video: "/videos/serum-still1-seedance.mp4", poster: "/stills/serum-still-1-pump.jpg" },
@@ -25,5 +26,7 @@ export const heroSlides: HeroSlideData[] = [
     title: "New Adara Nails",
     focus: "80% 25%",
     ratio: 3302 / 2300,
+    // Bottle labels run to the right edge: only a hint of feather there so they stay readable
+    soft: [72, 10],
   },
 ];
