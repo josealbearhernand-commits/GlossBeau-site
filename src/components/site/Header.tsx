@@ -184,9 +184,9 @@ export function Header() {
         <div className="mx-4 hidden w-full min-w-0 max-w-[412px] shrink lg:block xl:mx-10 xl:ml-auto">{search("site-search")}</div>
 
         <div className="flex h-full items-center lg:ml-auto xl:ml-0">
-          <a href={`mailto:${site.supportEmail}`} className="hidden h-full items-center px-4 text-[1rem] text-header-text transition-colors hover:text-announce-bg xl:flex">
+          <Link href="/contact" className="hidden h-full items-center px-4 text-[1rem] text-header-text transition-colors hover:text-announce-bg xl:flex">
             Support
-          </a>
+          </Link>
           {/* Cart: opens the drawer; the peach badge shows the live item count */}
           <button
             type="button"
@@ -228,9 +228,9 @@ export function Header() {
                 </li>
               ))}
               <li>
-                <a href={`mailto:${site.supportEmail}`} className="flex h-14 items-center text-[1rem] text-header-text opacity-80">
-                  Support: {site.supportEmail}
-                </a>
+                <Link href="/contact" onClick={() => setOpen(false)} className="flex h-14 items-center text-[1rem] text-header-text opacity-80">
+                  Support: contact us
+                </Link>
               </li>
             </ul>
           </nav>

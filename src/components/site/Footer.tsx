@@ -24,7 +24,7 @@ export async function Footer() {
       links: [
         ["Shipping and returns", "/policies/refunds"],
         ["Track an order", site.orderStatusUrl, "Orders are handled by our partner, Diamond Pro Salon Supply"],
-        ["Contact us", `mailto:${site.supportEmail}`],
+        ["Contact us", "/contact"],
       ],
     },
     {

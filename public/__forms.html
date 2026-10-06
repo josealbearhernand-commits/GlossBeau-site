@@ -1,0 +1,23 @@
+<!doctype html>
+<!--
+  Netlify Forms registry. Netlify finds forms by reading static HTML at deploy time, and the Next.js pages are
+  rendered by functions, so every form the site submits is declared here (hidden). The real form lives in
+  src/components/site/ContactForm.tsx and POSTs to /__forms.html with the same field names.
+  - "email" sets the Reply-To of the notification e-mail, so replying goes straight to the customer.
+  - "bot-field" is the honeypot: real visitors never see it; submissions that fill it are dropped as spam.
+  Keep the field names here and in ContactForm.tsx identical.
+-->
+<html>
+  <head><meta charset="utf-8" /><title>Forms</title></head>
+  <body>
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input name="subject" type="hidden" />
+      <input name="name" type="text" />
+      <input name="email" type="email" />
+      <input name="order" type="text" />
+      <textarea name="message"></textarea>
+      <input name="bot-field" type="text" />
+    </form>
+  </body>
+</html>
