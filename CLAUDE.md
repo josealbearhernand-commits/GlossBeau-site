@@ -88,7 +88,7 @@ I'm not very technical. Explain each step in plain language and tell me before r
 - Contact (2026-10-05): `/contact` posts to `/__forms.html` (Netlify Forms needs the static copy in `public/__forms.html`,
   same field names). Form detection was turned ON for the site via API (processing_settings.ignore_html_forms=false);
   an email notification hook sends each message to service@glossbeau.com; field `email` = Reply-To. Headless-browser
-  test posts get a 200 but are silently dropped as bots; test from a real browser. Two TEST submissions exist from setup.
+  test posts get a 200 but are silently dropped as bots; test from a real browser.
 - Newsletter: `/api/newsletter` + `src/lib/shopify-admin.ts` (Dev Dashboard app, client credentials, write/read_customers,
   tag glossbeau-newsletter). Needs SHOPIFY_ADMIN_CLIENT_ID / SHOPIFY_ADMIN_CLIENT_SECRET locally and in Netlify; the
   footer box switches to it with `kind="newsletter"` on its EmailForm (still mailto until the keys are tested).
