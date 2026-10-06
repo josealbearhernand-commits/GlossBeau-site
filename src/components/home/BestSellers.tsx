@@ -56,7 +56,8 @@ export function BestSellers({ products, now }: { products: Record<Tab, ShopProdu
   };
 
   return (
-    <section id="best-sellers" className="pd-section container-pd scroll-mt-24">
+    <section id="best-sellers" className="bg-band-light scroll-mt-24 py-[var(--fade-len)]">
+      <div className="container-pd">
       <div className="pb-6 lg:pb-10">
         <SectionHeading>Best sellers</SectionHeading>
       </div>
@@ -108,7 +109,7 @@ export function BestSellers({ products, now }: { products: Record<Tab, ShopProdu
           id="best-sellers-panel"
           role="tabpanel"
           aria-label={`${tabs.find((t) => t.key === tab)?.label} best sellers`}
-          className="carousel -mx-5 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-2 lg:mx-0 lg:px-0"
+          className="carousel -mx-5 -my-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 py-4 lg:mx-0 lg:px-0"
         >
           {items.map((p) => (
             <li key={p.handle} className="carousel-item snap-start">
@@ -135,6 +136,7 @@ export function BestSellers({ products, now }: { products: Record<Tab, ShopProdu
           ))}
         </nav>
       )}
+      </div>
     </section>
   );
 }

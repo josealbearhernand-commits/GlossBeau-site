@@ -73,6 +73,23 @@ buttons, Shop for the floating product-card constellation).
   the oil, no splash; leave-ins (Thermoliss, Glycolic) = light like water; Agua Milagrosa = water-light but
   tinted, trigger spray, so mist rather than drip.
 
+## Product cards side by side (owner rule, 2026-10-05)
+Whenever products sit next to each other (collection, brand and search grids, related products, carousels, and any
+new layout), every card in the row is the same height and the cards line up at the top and the bottom:
+- The card fills its grid cell or flex slot: `h-full` on the card and on every wrapper between the cell and the card.
+- The text area under the photo is `flex-1`; the product name always reserves two lines (`line-clamp-2` plus a
+  two-line min-height), the vendor is one line (`truncate`), so the prices line up across the row.
+- Photo boxes stay the shared 4:5 `ProductImage`. Use `ProductCard` (grids) or `ProductTile` (carousels); do not
+  build a new card. Check by measuring: every card in a row reports the same height.
+
+## Background system (2026-10-05)
+Tokens in `src/app/globals.css`: lighter cream `--canvas` #f8f1e7, peach `--peach` (#ff965b, same as the top strip)
+mixed in with color-mix() for `--canvas-top`, `--canvas-soft` (light area under the hero), `--canvas-peach` (warm
+orange-cream behind product cards), `--glow-peach(-strong)` blooms. Transitions use `--fade-len` (96px phones,
+180px desktop). White cards get `--shadow-sm` plus a feathered white edge (`--feather`, or `--feather-tight` on the
+orange). Section classes: `.hero-fade`, `.bg-hero-tail`, `.bloom`, `.bg-brands`, `.bg-band-light` (Best sellers),
+`.halo` (brands wall), `.halo-warm` (product grids). No images and no background-attachment: fixed.
+
 ## Imagery
 - Only real product photos from the Diamond Pro Salon Supply Shopify store (cdn.shopify.com). Product
   shots sit on a white "paper" tile with 20px breathing room, never cropped. No stock images, no

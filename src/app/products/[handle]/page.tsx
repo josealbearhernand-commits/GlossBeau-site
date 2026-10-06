@@ -77,7 +77,7 @@ export default async function ProductPage({ params }: { params: Params }) {
           <ul className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
             {related.map((r, i) => (
               <li key={r.handle} className="min-w-0">
-                <Reveal effect="float" delay={i * 0.07}>
+                <Reveal effect="float" delay={i * 0.07} className="h-full">
                   <ProductCard product={r} as="h3" />
                 </Reveal>
               </li>

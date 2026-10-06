@@ -14,7 +14,7 @@ export function ProductCard({ product, priority = false, as: Heading = "h2" }: {
   return (
     <Link
       href={`/products/${product.handle}`}
-      className="card group flex min-w-0 flex-col text-ink outline-offset-4 transition-shadow duration-300 hover:shadow-[var(--shadow-lg)]"
+      className="card group flex h-full min-w-0 flex-col text-ink outline-offset-4 transition-shadow duration-300"
     >
       {/* The shared 4:5 photo box (ProductImage), white and square, edge to edge in the card */}
       <div className="frame gloss">
@@ -34,9 +34,10 @@ export function ProductCard({ product, priority = false, as: Heading = "h2" }: {
           <Icon name="plus" size={18} />
         </span>
       </div>
-      <div className="flex flex-col gap-1 px-4 pb-4 pt-2">
-        <p className="t-micro text-muted">{product.vendor}</p>
-        <Heading className="t-ui-sm line-clamp-2 text-ink">{product.title}</Heading>
+      <div className="flex flex-1 flex-col gap-1 px-4 pb-4 pt-2">
+        <p className="t-micro truncate text-muted">{product.vendor}</p>
+        {/* Name always reserves two lines, so every card in a row is the same height and the prices line up */}
+        <Heading className="t-ui-sm line-clamp-2 min-h-[2.4em] text-ink">{product.title}</Heading>
         <p className="tnum t-body-sm flex items-baseline gap-2 text-ink">
           <span>{money(product.price)}</span>
           {onSale && <s className="text-muted">{money(product.compareAtPrice!)}</s>}

@@ -17,12 +17,13 @@ const SALE_MIN = 8;
 export async function Footer() {
   const saleCount = await countCollectionProducts("sales").catch(() => 0);
 
-  const cols: { title: string; links: [string, string][] }[] = [
+  // A link may carry a small muted note shown under it: [label, href, note?]
+  const cols: { title: string; links: [string, string, string?][] }[] = [
     {
       title: "Support",
       links: [
         ["Shipping and returns", "/policies/refunds"],
-        ["Track an order", `mailto:${site.supportEmail}?subject=${encodeURIComponent("Where is my order?")}`],
+        ["Track an order", site.orderStatusUrl, "Orders are handled by our partner, Diamond Pro Salon Supply"],
         ["Contact us", `mailto:${site.supportEmail}`],
       ],
     },
@@ -41,7 +42,7 @@ export async function Footer() {
         ["Nails", "/collections/nails"],
         ["Barber", "/collections/barber"],
         ["Tools", "/collections/tools-accessories"],
-        ...(saleCount >= SALE_MIN ? ([["Sale", "/collections/sales"]] as [string, string][]) : []),
+        ...(saleCount >= SALE_MIN ? ([["Sale", "/collections/sales"]] as [string, string, string?][]) : []),
       ],
     },
   ];
@@ -63,11 +64,12 @@ export async function Footer() {
             <nav key={c.title} aria-label={c.title}>
               <h2 className="mb-4 text-[0.8125rem] font-semibold uppercase leading-none tracking-[0.12em] text-header-text">{c.title}</h2>
               <ul className="grid gap-3">
-                {c.links.map(([label, href]) => (
+                {c.links.map(([label, href, note]) => (
                   <li key={label}>
                     <Link href={href} className={link}>
                       {label}
                     </Link>
+                    {note && <p className="mt-1 max-w-[26ch] text-[0.75rem] leading-4 text-header-text/70">{note}</p>}
                   </li>
                 ))}
               </ul>
@@ -98,7 +100,7 @@ export async function Footer() {
       <div className="border-t border-header-field">
         <div className="container-pd flex flex-col items-center gap-4 py-6 text-center lg:flex-row lg:justify-between lg:text-left">
           <p className="text-[0.875rem] leading-5 text-header-text/85">
-            © {new Date().getFullYear()} {site.brand} · {site.legalName}
+            © {new Date().getFullYear()} {site.brand}
           </p>
           <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2">
             {(

@@ -13,6 +13,11 @@ I will give you the access token when you ask. Keep it in a private .env file.
 ## Design
 Use the style guide in DESIGN.md (colors, fonts, sizes, spacing) for the whole site. Use resources inside the DESIGN.md to built. 
 The font "BwGradual" is a paid font. Use a free, similar-looking Google Font instead.
+- Product cards side by side (any grid, row or carousel, on any page, now and in every future design) must all be
+  the SAME HEIGHT and line up at top AND bottom: the card fills its cell (`h-full` on the card and on any wrapper such
+  as `<Reveal className="h-full">`), the text area is `flex-1`, the name always reserves 2 lines (`line-clamp-2` +
+  min-height), the vendor is one line (`truncate`), so prices sit on one line across the row. Reuse ProductCard /
+  ProductTile instead of building a new card. See DESIGN.md "Product cards side by side".
 
 ## How to work with me
 I'm not very technical. Explain each step in plain language and tell me before running anything.

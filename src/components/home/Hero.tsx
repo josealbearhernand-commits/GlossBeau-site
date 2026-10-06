@@ -131,7 +131,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
   );
 
   return (
-    <section ref={ref} className="flex flex-col items-center pb-4">
+    <section ref={ref} className="bg-hero-tail flex flex-col items-center pb-4">
       <div
         className="hero-stage relative h-[420px] w-full overflow-hidden bg-faint lg:h-[min(600px,70svh)]"
         onPointerEnter={() => setPaused(true)}
@@ -186,6 +186,9 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
           </div>
         ))}
 
+        {/* The photo melts into the page below instead of ending on a hard line */}
+        <div className="hero-fade" aria-hidden="true" />
+
         <button
           type="button"
           onClick={() => go(index - 1, -1)}
@@ -215,7 +218,7 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
       </div>
 
       {/* The page's h1: the big wordmark, with the store's one-line description for screen readers and search engines */}
-      <h1 className="hero-mark mt-8 flex flex-col items-center">
+      <h1 className="hero-mark bloom mt-8 flex flex-col items-center">
         <Logo tone="dark" height={72} />
         <span className="sr-only">: salon-grade hair care, nails, barber supplies and styling tools, open to everyone</span>
       </h1>

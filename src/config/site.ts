@@ -9,6 +9,8 @@ export const site = {
   /** Legal seller of record, shown on policy pages. */
   legalName: "Beauty Innovation LLC",
   supportEmail: "service@glossbeau.com",
+  /** Shopify order lookup (customer accounts of the partner store that runs checkout): sign in with email + code, see orders and tracking. */
+  orderStatusUrl: "https://account.diamondprosalonsupply.com/orders",
   /** Postal address shown in the policy contact blocks. */
   address: "3901 Williams Blvd, Suite 22, Kenner, LA 70065, United States",
   /** Public brand name, never a placeholder. */

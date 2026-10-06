@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "Salon-grade hair care, nails, barber and styling tools, for everyone. Curated professional brands with real results.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f2ebd0",
+    background_color: "#f8f1e7",
     theme_color: "#2a2521",
     icons: [
       { src: "/brand/glossbeau-icon-512.png", sizes: "512x512", type: "image/png" },

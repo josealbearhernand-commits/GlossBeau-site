@@ -14,10 +14,10 @@ export function ProductGrid({ page, base, empty }: { page: Page<ShopProduct>; ba
   const next = page.endCursor ? `${base}${base.includes("?") ? "&" : "?"}after=${encodeURIComponent(page.endCursor)}` : null;
   return (
     <>
-      <ul className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
+      <ul className="halo-warm grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
         {page.items.map((p, i) => (
           <li key={p.handle} className="min-w-0">
-            <Reveal effect="float" delay={(i % 4) * 0.06}>
+            <Reveal effect="float" delay={(i % 4) * 0.06} className="h-full">
               <ProductCard product={p} priority={i < 4} />
             </Reveal>
           </li>
