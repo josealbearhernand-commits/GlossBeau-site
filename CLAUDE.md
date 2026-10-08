@@ -24,7 +24,6 @@ I'm not very technical. Explain each step in plain language and tell me before r
 
 
 ## Where things stand (updated 2026-10-04)
-- Site: Next.js 16 in this folder. Run `npm run dev` and open http://localhost:3000. `npm run build` passes.
 - Homepage below the brands grid is a copy of peakdesign.com's layout (measured at 1440/390px, numbers in
   each component's comment): Peak-style header (40px strip + 80px nav, rotating search placeholder),
   Best sellers tabs + carousel, Explore 3×3 tiles, What's new dark panel, company tiles + featured split,
@@ -39,18 +38,14 @@ I'm not very technical. Explain each step in plain language and tell me before r
   `.env.local` with SHOPIFY_STORE_DOMAIN + SHOPIFY_STOREFRONT_ACCESS_TOKEN (see `.env.example`). Without it (or on
   any Shopify error) pages show the `CatalogError` message, never products. `src/data/home.ts` is config only
   (tabs, 11 featured brands with exact Shopify vendor names, explore collections, hair-care hub list, What's new).
-- Routes: `/collections/[handle]` = exactly one Shopify collection; `/brands` = every vendor A–Z with counts;
-  `/brands/[slug]` = products whose vendor matches (vendor:'…' query, slug from `brandSlug()`); `/hair-care` = hub
-  of the hair collections because Shopify has no single hair-care collection; `/products/[handle]` = live photos,
-  options, variants, Add to cart. "Show more" paginates with Shopify cursors (?after=).
+- Routes: `/hair-care` is a hub because Shopify has no single hair-care collection; brand pages match the exact
+  Shopify vendor name.
 - Product photos: ONE component `src/components/product/ProductImage.tsx` draws every card's photo (homepage carousel,
   collections, brands, search, related): grey 4:5 box, photo centred in the inner 80%, multiply blend, never shown above 2×
   its own pixels. `scripts/trim-images.mjs` (prebuild, `npm run images`) trims EVERY product's featured photo from the
   Storefront API into `public/products/*.webp` (cap 800px) + `src/data/trimmed.json`; `resolvePhoto()` in shopify.ts picks
   the trimmed copy or the CDN URL at width=800. Cached by URL: a build only processes new photos (679 cached 2026-10-04).
-- Cart: Storefront Cart API (`src/lib/cart.ts`, server actions in `src/app/actions/cart.ts`, cookie `gb_cart` 30 days,
-  attribute source=glossbeau). `CartProvider` + `CartDrawer` in the layout; "Add to cart" in ProductForm; Checkout = cart.checkoutUrl
-  on Shopify Checkout (partner store Diamond Pro Salon Supply, named ONLY in the drawer note). Free shipping threshold is one
+- Cart: Storefront Cart API; Checkout = cart.checkoutUrl on Shopify Checkout (partner store Diamond Pro Salon Supply, named ONLY in the drawer note). Free shipping threshold is one
   setting: `site.freeShippingThreshold` (90) → announcement bar, cart line, product page; policies text says $90 / $8 / $15.
 - Cache: every Storefront fetch is tagged "shopify"; `POST /api/revalidate` (secret REVALIDATE_SECRET in production, none in
   dev) drops it all. Run `curl -X POST http://localhost:3000/api/revalidate` after changing products or collections.
@@ -66,25 +61,14 @@ I'm not very technical. Explain each step in plain language and tell me before r
 - Look: Shop-style layout (28px soft cards, pills, Inter) on linen #f6f1eb, walnut #403a34 text, one accent
   Apricot clay #d4784e. Tokens in `src/app/globals.css`; the live design system is
   https://claude.ai/artifact/FmpZLez9iDpkmvWzpPKGxT and its source files are in `design-system/project/`.
-- Hero: square-edged, edge to edge, 600px tall on desktop (max 70% of the screen height) and 420px on phones.
-  7 slides in `src/data/catalog.ts` `heroSlides`: 6 product clips (1112×834 approved Higgsfield takes in
-  `public/videos/`, 1600×1200 posters in `public/stills/`) + the New Adara campaign portrait
-  (`public/images/new-adara-gloss-society-wide.jpg`, a 3302×2300 full-resolution crop of the 3302×5331 original;
-  its hands are soft in the photo itself). On desktop the 4:3 clips show whole with a blurred copy of the still
-  filling the sides, so no bottle is cut. Since 2026-10-05 the New Adara photo does the same on desktop
-  (it was magnified ~1.7× by cover), media edges are feathered into the blur (`.hero-media-soft`, `--ar` per slide), and
-  the bottom fade (`.hero-fade`, 64/96px) is eased so photos stay crisp. Arrows only: no dots, no link button, no scale/zoom on the slides.
+- Hero rules (sizes, slides, blur sides, arrows only): `src/components/home/CLAUDE.md`.
 - Site photos saved locally in `public/images/`: BaBylissPRO tools (Diamond Pro hero-14, cropped to the tools), Gloss Society Kit
   contents (What's new feature, pinned in `src/data/home.ts`, not replaced by live data).
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
 - Brand grid under the hero copies the Diamond Pro brands wall; logos come from Shopify shop_images.
 - Screenshot helper: `C:\Users\beaut\.claude\projects\C--shopify-dev\tools\glossbeau-shots.js` (env ROUTE, MOTION).
-- Deploy: Netlify builds from GitHub main (webhook + deploy key, Next.js runtime plugin, publish .next). Env vars live in
-  Netlify (SHOPIFY_*, REVALIDATE_SECRET). Netlify's free plan only auto-builds commits authored by the Netlify account
-  email (diamondprosalon@gmail.com); commits from josealbearhernand@gmail.com are "unrecognized contributor" and need
-  `netlify api createSiteBuild --data '{"site_id":"3d661db8-9c7f-4143-8720-85ccbdf7f024"}'` or a local
-  `git config user.email diamondprosalon@gmail.com`. The repo is public. Site visibility was set to Public in the Netlify UI.
-  Local `netlify deploy --build` fails on Windows (plugin static publish); always build on Netlify.
+- Deploy: commit as diamondprosalon@gmail.com or Netlify won't auto-build; never run `netlify deploy --build` locally.
+  Details: `glossbeau-deploy` skill.
 - Contact (2026-10-05): `/contact` posts to `/__forms.html` (Netlify Forms needs the static copy in `public/__forms.html`,
   same field names). Form detection was turned ON for the site via API (processing_settings.ignore_html_forms=false);
   an email notification hook sends each message to service@glossbeau.com; field `email` = Reply-To. Headless-browser
@@ -93,5 +77,3 @@ I'm not very technical. Explain each step in plain language and tell me before r
   tag glossbeau-newsletter). Needs SHOPIFY_ADMIN_CLIENT_ID / SHOPIFY_ADMIN_CLIENT_SECRET locally and in Netlify; the
   footer box switches to it with `kind="newsletter"` on its EmailForm (still mailto until the keys are tested).
 - Impeccable skill installed 2026-10-04 into `.claude/skills/impeccable` (project scope, `npx impeccable install`); run `/impeccable <command>`.
-  Audit 2026-10-04: 11/20 → 16/20 after adapt/harden/clarify/typeset/optimize/animate/polish (reports in
-  `design-system/review/`). `/search?q=` is a real route; products without a photo show the NoPhoto frame; `--hairline` token for 3:1 lines.
