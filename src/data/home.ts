@@ -94,6 +94,26 @@ export const whatsNew = {
   href: "/products/new-adara-gloss-society-kit",
 };
 
+/**
+ * "Nail brands" slider under the brands wall (look copied from nailsbestbuy.com's slideshow). One slide per
+ * brand; the photos are Higgsfield scenes made from our real Shopify product photos (sources and flaws:
+ * design-system/review/2026-10-18-pla-slides, 2026-10-19-new-adara-slides). Add DND here when its picture is ready.
+ */
+export const nailBrandSlides: { brand: string; image: string; alt: string; href: string }[] = [
+  {
+    brand: "PLA",
+    image: "/images/brand-slides/pla-beach.webp",
+    alt: "PLA gel polish bottles in rainbow colors on a stone slab on the beach, with lemons and sunglasses",
+    href: `/brands/${brandSlug("PLA")}`,
+  },
+  {
+    brand: "New Adara",
+    image: "/images/brand-slides/new-adara-swatches.webp",
+    alt: "A row of pink New Adara gel polish bottles with a rainbow of gel color swatches in front",
+    href: `/brands/${brandSlug("New Adara")}`,
+  },
+];
+
 export const NEW_WINDOW_DAYS = 30;
 export const isNew = (createdAt: string, now = Date.now()) =>
   now - new Date(createdAt).getTime() < NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;

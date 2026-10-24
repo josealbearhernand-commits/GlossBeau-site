@@ -1,5 +1,6 @@
 import { Hero } from "@/components/home/Hero";
 import { BrandGrid } from "@/components/home/BrandGrid";
+import { NailBrandSlides } from "@/components/home/NailBrandSlides";
 import { BestSellers } from "@/components/home/BestSellers";
 import { ExploreGrid } from "@/components/home/ExploreGrid";
 import { WhatsNew } from "@/components/home/WhatsNew";
@@ -19,6 +20,7 @@ export default async function Home() {
     <>
       <Hero slides={heroSlides} />
       <BrandGrid brands={data?.brands} />
+      <NailBrandSlides />
       {data ? (
         <BestSellers products={data.bestSellers} now={data.now} />
       ) : (

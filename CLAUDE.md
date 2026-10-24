@@ -66,6 +66,11 @@ I'm not very technical. Explain each step in plain language and tell me before r
   contents (What's new feature, pinned in `src/data/home.ts`, not replaced by live data).
   Recipe and viscosity notes: DESIGN.md "Cinematic scenes"; reusable skill `/cinematic-scene`.
 - Brand grid under the hero copies the Diamond Pro brands wall; logos come from Shopify shop_images.
+- Nail brands slider (2026-10-23) right under the brand grid: `src/components/home/NailBrandSlides.tsx`, slides in
+  `nailBrandSlides` (`src/data/home.ts`), photos in `public/images/brand-slides/`. Look copied from nailsbestbuy.com
+  (frosted "Shop <brand>" pill, numbered pager, round arrows). Photos are Higgsfield scenes made from real Shopify
+  product photos (PLA beach, New Adara pink bottles); originals and flaws in `design-system/review/2026-10-1*-*-slides`
+  (not committed). DND is next.
 - Screenshot helper: `C:\Users\beaut\.claude\projects\C--shopify-dev\tools\glossbeau-shots.js` (env ROUTE, MOTION).
 - Deploy: commit as diamondprosalon@gmail.com or Netlify won't auto-build; never run `netlify deploy --build` locally.
   Details: `glossbeau-deploy` skill.

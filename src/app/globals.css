@@ -280,6 +280,11 @@ body {
 .brand-card:hover img { transform: translateY(-4px) scale(1.05); }
 .brand-card[hidden] { display: none; }
 
+/* Nail brands slider — frosted pill copied from nailsbestbuy.com (blur 12px, saturate 1.6, white 60% hairline) */
+.glass-pill { background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 62%, transparent), color-mix(in srgb, var(--surface) 38%, transparent)); border: 1px solid color-mix(in srgb, var(--surface) 70%, transparent); -webkit-backdrop-filter: blur(12px) saturate(1.6); backdrop-filter: blur(12px) saturate(1.6); box-shadow: var(--shadow-sm); }
+a.glass-pill { transition: background-color .2s ease, transform .2s ease; }
+a.glass-pill:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--surface) 80%, transparent); }
+
 /* "More brands (X)" tile: white like the others, with a peach border and a peach arrow button so it is easy to spot */
 .brand-card-more { border-color: var(--peach); }
 .brand-card-more-arrow { display: grid; place-items: center; width: 32px; height: 32px; margin-top: 4px; border-radius: 9999px; background: var(--peach); color: var(--on-button); transition: transform .25s ease; }
